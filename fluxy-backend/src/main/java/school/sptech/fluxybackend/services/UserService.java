@@ -11,7 +11,6 @@ import school.sptech.fluxybackend.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -48,12 +47,10 @@ public class UserService {
     public UserResponseDTO update(Long id, UserRequestDTO dto){
        User entity = repository.findById(id)
            .orElseThrow(() -> new ResourceNotFoundException("Não existe"));
-       entity.setName(dto.getName());
+       entity.setFirstName(dto.getFirstName());
+       entity.setLastName(dto.getLastName());
        entity.setEmail(dto.getEmail());
        entity.setPhone(dto.getPhone());
-       entity.setAddress(dto.getAddress());
-       entity.setCity(dto.getCity());
-        entity.setState(dto.getState());
 
        User saved = repository.save(entity);
        return mapper.toDTO(saved);

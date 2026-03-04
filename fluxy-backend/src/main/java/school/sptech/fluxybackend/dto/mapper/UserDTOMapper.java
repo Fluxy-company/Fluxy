@@ -11,13 +11,10 @@ public class UserDTOMapper {
     public UserResponseDTO toDTO(User user){
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
-        dto.setName(user.getName());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
-        dto.setCnpj(user.getCnpj());
-        dto.setAddress(user.getAddress());
-        dto.setCity(user.getCity());
-        dto.setState(user.getState());
 
         return dto;
     }
@@ -25,14 +22,11 @@ public class UserDTOMapper {
     public User toEntity(UserRequestDTO dto){
         User user = new User();
                 user.setId(dto.getId());
-                user.setName(dto.getName());
+                user.setFirstName(dto.getFirstName());
+                user.setLastName(dto.getLastName());
                 user.setEmail(dto.getEmail());
                 user.setPassword(dto.getPassword());
                 user.setPhone(dto.getPhone());
-                user.setCnpj(dto.getCnpj());
-                user.setAddress(dto.getAddress());
-                user.setCity(dto.getCity());
-                user.setState(dto.getState());
 
                 return user;
     }

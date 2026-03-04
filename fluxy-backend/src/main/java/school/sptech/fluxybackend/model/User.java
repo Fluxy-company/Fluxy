@@ -15,8 +15,11 @@ public class User {
     @GeneratedValue(strategy  = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column
+    private String firstName;
+
+    @Column
+    private String lastName;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -26,15 +29,6 @@ public class User {
 
     @Column(nullable = false)
     private String phone;
-
-    @Column(nullable = false, unique = true)
-    private String cnpj;
-
-    private String address;
-
-    private String city;
-
-    private String state;
 
     @Column(nullable = false, updatable = false)
     private Long createdAt = System.currentTimeMillis();
