@@ -3,36 +3,36 @@ package school.sptech.fluxybackend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import school.sptech.fluxybackend.dto.UserRequestDTO;
-import school.sptech.fluxybackend.dto.UserResponseDTO;
-import school.sptech.fluxybackend.services.UserService;
+import school.sptech.fluxybackend.dto.UsuarioRequestDTO;
+import school.sptech.fluxybackend.dto.UsuarioResponseDTO;
+import school.sptech.fluxybackend.services.UsuarioService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
-public class UserController {
+public class UsuarioController {
 
     @Autowired
-    private UserService service;
+    private UsuarioService service;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> findAll() {
+    public ResponseEntity<List<UsuarioResponseDTO>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<UserResponseDTO> findById(@PathVariable("id") Long id){
+    public ResponseEntity<UsuarioResponseDTO> findById(@PathVariable("id") Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> create(@RequestBody UserRequestDTO dto){
+    public ResponseEntity<UsuarioResponseDTO> create(@RequestBody UsuarioRequestDTO dto){
         return ResponseEntity.status(201).body(service.create(dto));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserRequestDTO dto){
+    public ResponseEntity<UsuarioResponseDTO> update(@PathVariable Long id, @RequestBody UsuarioRequestDTO dto){
         return ResponseEntity.ok (service.update(id, dto));
     }
 

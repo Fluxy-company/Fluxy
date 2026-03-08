@@ -1,34 +1,33 @@
-package school.sptech.fluxybackend.model;
+package school.sptech.fluxybackend.models;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "Users")
+@Entity(name = "Usuario")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Data
 
-public class User {
+public class Usuario {
     @Id
     @GeneratedValue(strategy  = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private String firstName;
+    private String nome;
 
     @Column
-    private String lastName;
+    private String sobrenome;
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
-    private String password;
+    private String senha;
 
     @Column(nullable = false)
-    private String phone;
+    private String telefone;
 
     @Column(nullable = false, updatable = false)
     private Long createdAt = System.currentTimeMillis();

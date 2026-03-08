@@ -1,4 +1,4 @@
-package school.sptech.fluxybackend.exception.handler;
+package school.sptech.fluxybackend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -9,13 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class UserResponseDTO {
+public class UsuarioRequestDTO {
 
         private Long id;
-        private String firstName;
-        private String lastName;
+        private String nome;
+        private String sobrenome;
         private String email;
-        private String phone;
+        private String senha;
+        private String telefone;
+        private Long createdAt;
 
-}
+    }
