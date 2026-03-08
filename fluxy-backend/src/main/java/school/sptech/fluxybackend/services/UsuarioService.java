@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service;
 import school.sptech.fluxybackend.dto.UsuarioRequestDTO;
 import school.sptech.fluxybackend.dto.UsuarioResponseDTO;
 import school.sptech.fluxybackend.dto.mapper.UsuarioDTOMapper;
-import school.sptech.fluxybackend.exception.ResourceNotFoundException;
+import school.sptech.fluxybackend.exception.EmailJaCadastradoException;
+import school.sptech.fluxybackend.exception.RecursoNaoEncontradoException;
 import school.sptech.fluxybackend.models.Usuario;
 import school.sptech.fluxybackend.repository.UsuarioRepository;
 
@@ -21,7 +22,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioDTOMapper mapper;
 
-    public List<UsuarioResponseDTO> findAll(){
+    public List<UsuarioResponseDTO> buscarTodos(){
        List<Usuario> usuarios = repository.findAll();
        List<UsuarioResponseDTO> dtos = new ArrayList<>();
 
@@ -31,22 +32,32 @@ public class UsuarioService {
                 return dtos;
     }
 
-    public UsuarioResponseDTO findById(Long id){
+    public UsuarioResponseDTO acharPeloId(Long id){
        Usuario usuario = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sem registros nesse id"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Sem registros nesse id"));
     return mapper.toDTO(usuario);
     }
+    
+    public UsuarioResponseDTO buscarUsuarioPorEmail(String email){
+        Usuario usuario = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email não encontrado"));
+        return mapper.toDTO(usuario);
+    }
 
-    public UsuarioResponseDTO create(UsuarioRequestDTO dto){
+    public UsuarioResponseDTO salvarUsuario(UsuarioRequestDTO dto){
+        if(repository.existsByEmail(dto.getEmail())){
+            throw new EmailJaCadastradoException("Email já cadastrado");
+        }
+
         Usuario usuario = mapper.toEntity(dto);
         usuario.setCreatedAt(System.currentTimeMillis());
         Usuario saved = repository.save(usuario);
         return mapper.toDTO(saved);
     }
 
-    public UsuarioResponseDTO update(Long id, UsuarioRequestDTO dto){
+    public UsuarioResponseDTO atualizarUsuarioPorId(Long id, UsuarioRequestDTO dto){
        Usuario entity = repository.findById(id)
-           .orElseThrow(() -> new ResourceNotFoundException("Não existe"));
+           .orElseThrow(() -> new RecursoNaoEncontradoException("Não existe"));
        entity.setNome(dto.getNome());
        entity.setSobrenome(dto.getSobrenome());
        entity.setEmail(dto.getEmail());
@@ -56,9 +67,9 @@ public class UsuarioService {
        return mapper.toDTO(saved);
     }
 
-    public void delete(Long id){
+    public void deletarPorId(Long id){
         Usuario entity = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sem registros nesse id"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Sem registros nesse id"));
         repository.delete(entity);
     }
 }
