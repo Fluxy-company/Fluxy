@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import school.sptech.fluxybackend.dto.UsuarioRequestDTO;
-import school.sptech.fluxybackend.dto.UsuarioResponseDTO;
+import school.sptech.fluxybackend.controllers.dto.UsuarioRequestDTO;
+import school.sptech.fluxybackend.controllers.dto.UsuarioResponseDTO;
 import school.sptech.fluxybackend.services.UsuarioService;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class UsuarioController {
     @GetMapping
 @Operation(summary = "Busca todos os usuarios", description = "Método que busca todos os usuarios")
     @ApiResponse(responseCode = "200", description = "Sucesso")
-    @ApiResponse(responseCode = "403", description = "Nenhum cadastro encontrado")
+    @ApiResponse(responseCode = "404", description = "Nenhum cadastro encontrado")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     public ResponseEntity<List<UsuarioResponseDTO>> buscarTodos() {
         return ResponseEntity.ok(service.buscarTodos());

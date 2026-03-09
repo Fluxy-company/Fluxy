@@ -1,36 +1,33 @@
 package school.sptech.fluxybackend.models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Entity(name = "tb_usuario")
+@Entity(name = "tb_empresa")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class Usuario {
+public class Empresa {
     @Id
     @GeneratedValue(strategy  = GenerationType.IDENTITY)
-    private Long idUsuario;
+    private Long idEmpresa;
+
+    @ManyToOne
+    @JoinColumn
+    private Usuario usuario;
 
     @Column
     private String nome;
-    @Column
-    private String sobrenome;
 
     @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String senha;
+    private String cnpj;
 
     @Column(nullable = false)
     private String telefone;
 
-    @Column(nullable = false, updatable = false)
-    private Long createdAt = System.currentTimeMillis();
-
 
 }
-

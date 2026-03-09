@@ -1,4 +1,4 @@
-package school.sptech.fluxybackend.dto;
+package school.sptech.fluxybackend.controllers.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 public class UsuarioResponseDTO {
 
-        private Long id;
+        private Long idUsuario;
         private String nome;
         private String sobrenome;
         private String email;

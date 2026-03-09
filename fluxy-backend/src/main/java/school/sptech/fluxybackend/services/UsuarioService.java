@@ -2,9 +2,9 @@ package school.sptech.fluxybackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import school.sptech.fluxybackend.dto.UsuarioRequestDTO;
-import school.sptech.fluxybackend.dto.UsuarioResponseDTO;
-import school.sptech.fluxybackend.dto.mapper.UsuarioDTOMapper;
+import school.sptech.fluxybackend.controllers.dto.UsuarioRequestDTO;
+import school.sptech.fluxybackend.controllers.dto.UsuarioResponseDTO;
+import school.sptech.fluxybackend.controllers.dto.mapper.UsuarioDTOMapper;
 import school.sptech.fluxybackend.exception.EmailJaCadastradoException;
 import school.sptech.fluxybackend.exception.RecursoNaoEncontradoException;
 import school.sptech.fluxybackend.models.Usuario;
@@ -40,7 +40,7 @@ public class UsuarioService {
     
     public UsuarioResponseDTO buscarUsuarioPorEmail(String email){
         Usuario usuario = repository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Email não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Email não encontrado"));
         return mapper.toDTO(usuario);
     }
 

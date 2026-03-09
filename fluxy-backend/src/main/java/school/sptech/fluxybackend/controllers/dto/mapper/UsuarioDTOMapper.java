@@ -1,8 +1,8 @@
-package school.sptech.fluxybackend.dto.mapper;
+package school.sptech.fluxybackend.controllers.dto.mapper;
 
 import org.springframework.stereotype.Component;
-import school.sptech.fluxybackend.dto.UsuarioRequestDTO;
-import school.sptech.fluxybackend.dto.UsuarioResponseDTO;
+import school.sptech.fluxybackend.controllers.dto.UsuarioRequestDTO;
+import school.sptech.fluxybackend.controllers.dto.UsuarioResponseDTO;
 import school.sptech.fluxybackend.models.Usuario;
 
 @Component
@@ -10,7 +10,7 @@ public class UsuarioDTOMapper {
 
     public UsuarioResponseDTO toDTO(Usuario usuario){
         UsuarioResponseDTO dto = new UsuarioResponseDTO();
-        dto.setId(usuario.getId());
+        dto.setIdUsuario(usuario.getIdUsuario());
         dto.setNome(usuario.getNome());
         dto.setSobrenome(usuario.getSobrenome());
         dto.setEmail(usuario.getEmail());
@@ -21,7 +21,7 @@ public class UsuarioDTOMapper {
 
     public Usuario toEntity(UsuarioRequestDTO dto){
         Usuario usuario = new Usuario();
-                usuario.setId(dto.getId());
+                usuario.setIdUsuario(dto.getIdUsuario());
                 usuario.setNome(dto.getNome());
                 usuario.setSobrenome(dto.getSobrenome());
                 usuario.setEmail(dto.getEmail());
