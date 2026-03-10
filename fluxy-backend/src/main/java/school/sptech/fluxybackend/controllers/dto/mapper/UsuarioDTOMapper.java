@@ -14,7 +14,6 @@ public class UsuarioDTOMapper {
         dto.setNome(usuario.getNome());
         dto.setSobrenome(usuario.getSobrenome());
         dto.setEmail(usuario.getEmail());
-        dto.setTelefone(usuario.getTelefone());
 
         return dto;
     }
@@ -26,7 +25,6 @@ public class UsuarioDTOMapper {
                 usuario.setSobrenome(dto.getSobrenome());
                 usuario.setEmail(dto.getEmail());
                 usuario.setSenha(dto.getSenha());
-                usuario.setTelefone(dto.getTelefone());
 
                 return usuario;
     }

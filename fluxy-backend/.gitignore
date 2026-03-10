@@ -33,3 +33,7 @@ build/
 .vscode/
 
 .env
+
+app.key
+app.pub
+

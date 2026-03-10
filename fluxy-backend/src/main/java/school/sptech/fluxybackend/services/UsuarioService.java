@@ -61,7 +61,7 @@ public class UsuarioService {
        entity.setNome(dto.getNome());
        entity.setSobrenome(dto.getSobrenome());
        entity.setEmail(dto.getEmail());
-       entity.setTelefone(dto.getTelefone());
+
 
        Usuario saved = repository.save(entity);
        return mapper.toDTO(saved);
