@@ -15,6 +15,5 @@ public class UsuarioRequestDTO {
         private String sobrenome;
         private String email;
         private String senha;
-        private String telefone;
         private Long createdAt;
     }

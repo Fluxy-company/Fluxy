@@ -16,5 +16,4 @@ public class UsuarioResponseDTO {
         private String nome;
         private String sobrenome;
         private String email;
-        private String telefone;
 }
