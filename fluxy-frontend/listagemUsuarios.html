@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxy - Lista de Usuários</title>
+</head>
+
+<body>
+    <h1>Lista de Usuários</h1>
+
+    <button onclick="buscarTodos()">Listar Usuários</button>
+
+    <li id="lista" class="listaUsuarios"></li>
+
+     <a class="link" href="login.html">Voltar para login</a>
+
+</body>
+</html>
+
+<script>
+    async function buscarTodos() {
+
+        const resposta = await fetch("http://localhost:8080/api/v1/usuarios");
+        const usuarios = await resposta.json();
+
+        const lista = document.getElementById("lista");
+        lista.innerHTML = "";
+
+        usuarios.forEach(usuario => {
+            if(usuario.nome == "admin"){
+                return null;
+            }
+            lista.innerHTML += `
+            <li>${usuario.nome} ${usuario.sobrenome} - ${usuario.email}</li>
+        `;
+        });
+
+    }
+
+</script>

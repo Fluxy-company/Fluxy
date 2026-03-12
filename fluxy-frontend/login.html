@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxy - Login</title>
+</head>
+<body>
+
+<h1>Login</h1>
+
+<input type="text" id="email" placeholder="Email">
+<br><br>
+
+<input id="senha" type="password" placeholder="Senha">
+<br><br>
+
+<button onclick="login()">Entrar</button>
+
+<p id="mensagem" class="mensagem"></p>
+
+<a class="link" href="cadastro.html">Cadastro</a>
+</body>
+</html>
+
+<script>
+
+async function login(){
+
+    const usuario = {
+        email: document.getElementById("email").value,
+        senha: document.getElementById("senha").value
+    }
+
+    const resposta = await fetch("http://localhost:8080/api/v1/login",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify(usuario)
+    });
+
+    const mensagem = document.getElementById("mensagem");
+
+    if(resposta.ok){
+
+        const data = await resposta.json();
+
+        localStorage.setItem("token", data.token);
+
+        mensagem.innerHTML = "Login realizado com sucesso!";
+
+        setTimeout(()=>{
+            window.location = "listagemUsuarios.html"
+        }, 1000)
+
+    }else{
+        mensagem.innerHTML = "Email ou senha inválidos";
+    }
+
+}
+
+</script>
