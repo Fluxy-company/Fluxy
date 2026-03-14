@@ -15,6 +15,7 @@ import school.sptech.fluxybackend.services.EmpresaService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/empresas")
 @Tag(name = "Empresas", description = "Controller para salvar e editar dados das empresas")

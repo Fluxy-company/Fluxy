@@ -26,6 +26,7 @@ import school.sptech.fluxybackend.services.UsuarioService;
 import java.util.List;
 import java.util.Set;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/usuarios")
 @Tag(name = "Usuarios", description = "Controller para salvar e editar usuarios")

@@ -12,10 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import school.sptech.fluxybackend.controllers.dto.LoginRequestDTO;
 import school.sptech.fluxybackend.controllers.dto.LoginResponseDTO;
 import school.sptech.fluxybackend.models.Role;
@@ -26,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@CrossOrigin(origins = "*")
 @RestController
 @Tag(name = "Login", description = "Controller para autenticação de usuarios")
 @RequestMapping("/api/v1")
