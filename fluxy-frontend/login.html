@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fluxy - Login</title>
+    <script src="utils.js"></script>
 </head>
 <body>
 
@@ -27,10 +28,15 @@
 
 async function login(){
 
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
     const usuario = {
-        email: document.getElementById("email").value,
-        senha: document.getElementById("senha").value
+        email: email,
+        senha: senha
     }
+
+     const mensagem = document.getElementById("mensagem");
 
     const resposta = await fetch("http://localhost:8080/api/v1/login",{
         method:"POST",
@@ -40,7 +46,10 @@ async function login(){
         body: JSON.stringify(usuario)
     });
 
-    const mensagem = document.getElementById("mensagem");
+      if(!verificarEmail(usuario.email)){
+        mensagem.innerHTML = "Email inválido";
+        return;
+    }
 
     if(resposta.ok){
 
