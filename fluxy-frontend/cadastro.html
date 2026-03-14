@@ -67,11 +67,16 @@ async function cadastrar(){
         body: JSON.stringify(usuario)
     });
 
-    
+        console.log("Resposta da API")
+        console.log("Endpoint:", resposta.url);
+        console.log("Método: POST", );
+        console.log("Status:" , resposta.status);
+        console.log(resposta.statusText);
 
     if(resposta.ok){
         mensagem.innerHTML = "Usuário cadastrado!";
     }else{
+        console.log("Erro no cadastro:", resposta.statusText);
         mensagem.innerHTML = "Erro ao cadastrar";
     }
 

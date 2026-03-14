@@ -46,6 +46,12 @@ async function login(){
         body: JSON.stringify(usuario)
     });
 
+        console.log("Resposta da API")
+        console.log("Endpoint:", resposta.url);
+        console.log("Método: POST", );
+        console.log("Status:" , resposta.status);
+        console.log(resposta.statusText);
+
       if(!verificarEmail(usuario.email)){
         mensagem.innerHTML = "Email inválido";
         return;
@@ -64,6 +70,7 @@ async function login(){
         }, 1000)
 
     }else{
+         console.log("Erro no login:", resposta.statusText);
         mensagem.innerHTML = "Email ou senha inválidos";
     }
 
