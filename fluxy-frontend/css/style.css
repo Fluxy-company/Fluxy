@@ -1,39 +1,49 @@
 * {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-  color: #D6D6D6;
-  font-size: 600;
+font-family: "Inter", sans-serif;
+font-optical-sizing: auto;
+font-size: 600;
 }
 
 body {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(to bottom, #22344E, #0E1116);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+color: #D6D6DD;
+align-items: center;
+background: linear-gradient(to bottom, #22344E, #0E1116);
 }
 
 .main-section {
-  padding: 40px 80px;
-  border-radius: 10px;
-  border: 4px solid #CAF0F8;
-} 
+padding: 40px 80px;
+border-radius: 10px;
+border: 4px solid #CAF0F8;
+}
 
 input {
-  padding: 8px;
-  width: 250px;
-  border-radius: 4px;
+padding: 8px;
+width: 250px;
+color: #0E1116;
+border-radius: 4px;
 }
 
 button {
-  padding: 4px 20px;
-  border-radius: 4px;
-  background-color: #3281F8;
-  font-size: 24px;
-  align-self: center;
-  border: none;
+padding: 4px 20px;
+border-radius: 4px;
+background-color: #3281F8;
+font-size: 24px;
+color: #D6D6DD;
+align-self: center;
+border: none;
 }
 
 button:hover {
-  cursor: pointer;
+cursor: pointer;
+}
+
+.link{
+  color: #D6D6DD;
+}
+
+#login-section{
+  color: #D6D6DD;
 }
