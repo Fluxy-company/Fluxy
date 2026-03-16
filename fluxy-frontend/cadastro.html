@@ -1,32 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <title>Fluxy - Cadastro</title>
     <script src="utils.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-<h1>Cadastro</h1>
+    <div class="main-section">
+        
+        <h1>Cadastro</h1>
+        <label for="nome">Insira seu nome</label>
+        <br>
+        <input type="text" id="nome" placeholder="Nome">
+        <br><br>
+        
+        <label for="sobrenome">Insira seu sobrenome</label>
+        <br>
+        <input type="text" id="sobrenome" placeholder="Sobrenome">
+        <br><br>
+        
+        <label for="sobrenome">Insira seu email</label>
+        <br>
+        <input type="text" id="email" placeholder="Email">
+        <br><br>
+        
+        <label for="senha">Insira sua senha</label>
+        <br>
+        <input type="password" id="senha"  placeholder="Senha">
+        <br><br>
+        
+        <button onclick="cadastrar()">Cadastrar</button>
+        
+        <p id="mensagem"></p>
+        
+        <nav><label for="login-section">Já tem cadastro?</label>
+            <a href="login.html" id="login-section">Login</a> 
+        </nav>
+    </div>
 
-<input type="text" id="nome" placeholder="Nome">
-<br><br>
-
-<input type="text" id="sobrenome" placeholder="Sobrenome">
-<br><br>
-
-<input type="text" id="email" placeholder="Email">
-<br><br>
-
-<input type="password" id="senha"  placeholder="Senha">
-<br><br>
-
-<button onclick="cadastrar()">Cadastrar</button>
-
-<p id="mensagem"></p>
-
-<a href="login.html">Login</a> 
 </body>
 </html>
 
