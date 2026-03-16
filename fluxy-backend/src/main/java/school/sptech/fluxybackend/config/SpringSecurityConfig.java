@@ -10,11 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -58,15 +55,32 @@ public class SpringSecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(ROUTE_PERMIT).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/email").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/empresas").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/empresas/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/empresas").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/empresas").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/empresas/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/empresas").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/empresas/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/nome/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/dataInicio/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/status/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/projetos").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/projetos").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/projetos/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/projetos").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/projetos/**").permitAll()
+
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
