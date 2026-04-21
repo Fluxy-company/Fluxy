@@ -33,6 +33,10 @@ public class Eventos {
     @Column
     private String status;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
     @ManyToMany
     @JoinTable(
             name = "usuario_evento",

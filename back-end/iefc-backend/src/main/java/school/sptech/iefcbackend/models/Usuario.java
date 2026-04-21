@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import school.sptech.iefcbackend.controllers.dto.LoginRequestDTO;
+import school.sptech.iefcbackend.dto.LoginRequestDTO;
+import school.sptech.iefcbackend.models.Role;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "tb_usuario")
@@ -29,18 +31,16 @@ public class Usuario {
     private String sobrenome;
 
     @Column(length = 100, nullable = false, unique = true)
-    @Email
     private String email;
 
     @Column(nullable = false)
     private String senha;
 
-@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-@JoinTable(
-        joinColumns = @JoinColumn,
-        inverseJoinColumns = @JoinColumn
-)
-    private Set<Role> roles;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "tb_usuario_roles", joinColumns = @JoinColumn(name = "id_usuario"))
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>();
 
     @Column(nullable = false, updatable = false)
     private Long createdAt = System.currentTimeMillis();

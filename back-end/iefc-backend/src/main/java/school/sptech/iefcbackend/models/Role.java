@@ -1,47 +1,22 @@
 package school.sptech.iefcbackend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import lombok.Getter;
 
-@Entity(name = "tb_roles")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRole;
+@Getter
+public enum Role {
+    ADMIN("ROLE_ADMIN"),
+    BASIC("ROLE_BASIC");
 
-    private String nome;
+    private final String authority;
 
-    public Long getIdRole() {
-        return idRole;
+    Role(String authority) {
+        this.authority = authority;
     }
 
-    public void setIdRole(Long idRole) {
-        this.idRole = idRole;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-
-    public enum Valores{
-        ADMIN(1L),
-        BASIC(2L);
-
-        long idRole;
-
-        Valores(long idRole) {
-            this.idRole = idRole;
+    public static Role fromAuthority(String authority) {
+        for (Role role : values()) {
+            if (role.authority.equalsIgnoreCase(authority)) return role;
         }
-
-        public long getIdRole() {
-            return idRole;
-        }
+        throw new IllegalArgumentException("Role desconhecida: " + authority);
     }
 }

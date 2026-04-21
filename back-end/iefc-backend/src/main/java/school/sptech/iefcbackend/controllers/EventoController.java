@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -59,11 +60,11 @@ public class EventoController {
     @ApiResponse(responseCode = "200", description = "video editado com sucesso")
     @ApiResponse(responseCode = "400", description = "Não encontrado")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
-    public ResponseEntity<Eventos> atualizarEventoPorId(@PathVariable Long id, @RequestBody Eventos eventos){
+    public ResponseEntity<Eventos> atualizarEventoPorId(@Valid @PathVariable Long id, @RequestBody Eventos eventos){
         return ResponseEntity.ok(eventoService.atualizarPorId(id, eventos));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Operation(summary = "Deletar eventos pelo id", description = "Método que deleta os eventos id")
     @ApiResponse(responseCode = "200", description = "Evento deletada com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem eventos nesse id")

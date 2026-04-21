@@ -2,9 +2,9 @@ package school.sptech.iefcbackend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import school.sptech.iefcbackend.controllers.dto.UsuarioRequestDTO;
-import school.sptech.iefcbackend.controllers.dto.UsuarioResponseDTO;
-import school.sptech.iefcbackend.controllers.dto.mapper.UsuarioDTOMapper;
+import school.sptech.iefcbackend.dto.UsuarioRequestDTO;
+import school.sptech.iefcbackend.dto.UsuarioResponseDTO;
+import school.sptech.iefcbackend.dto.mapper.UsuarioDTOMapper;
 import school.sptech.iefcbackend.exception.EmailJaCadastradoException;
 import school.sptech.iefcbackend.exception.RecursoNaoEncontradoException;
 import school.sptech.iefcbackend.models.Usuario;

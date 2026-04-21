@@ -16,7 +16,7 @@ import java.util.List;
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Video_id")
+    @Column(name = "idVideo")
     private Long id;
 
     private String titulo;
@@ -27,7 +27,7 @@ public class Video {
     @JoinTable(
             name = "curso_video",
             joinColumns = @JoinColumn(name = "idVideo"),
-            inverseJoinColumns = @JoinColumn(name = "idEvento"))
+            inverseJoinColumns = @JoinColumn(name = "idCurso"))
     private List<Curso> cursos;
 
 }

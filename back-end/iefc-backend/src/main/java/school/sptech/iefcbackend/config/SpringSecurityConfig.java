@@ -37,49 +37,38 @@ public class SpringSecurityConfig {
     @Value("${jwt.private.key}")
     private RSAPrivateKey privateKey;
 
-    private static final String[] ROUTE_PERMIT = {
-            "/v3/api-docs",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
+    private static final String[] SWAGGER_ROUTES = {
+            "/v3/api-docs", "/v3/api-docs/**",
+            "/swagger-ui/**", "/swagger-ui.html",
+            "/swagger-resources/**", "/webjars/**"
+    };
 
+    private static final String[] PUBLIC_GET_ROUTES = {
+            "/api/v1/usuarios/**",
+            "/api/v1/empresas/**",
+            "/api/v1/projetos/**",
+            "/api/v1/projetos/nome/**",
+            "/api/v1/projetos/dataInicio/**",
+            "/api/v1/projetos/status/**"
+    };
+
+    private static final String[] PUBLIC_WRITE_ROUTES = {
+            "/api/v1/usuarios/**",
+            "/api/v1/empresas/**",
+            "/api/v1/projetos/**",
+            "/api/v1/login"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(ROUTE_PERMIT).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/email").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/empresas/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/empresas/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/empresas/**").permitAll()
+                        .requestMatchers(SWAGGER_ROUTES).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/nome/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/dataInicio/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/status/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/projetos/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/projetos/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_GET_ROUTES).permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_WRITE_ROUTES).permitAll()
+                        .requestMatchers(HttpMethod.PUT, PUBLIC_WRITE_ROUTES).permitAll()
+                        .requestMatchers(HttpMethod.DELETE, PUBLIC_WRITE_ROUTES).permitAll()
 
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
@@ -93,7 +82,7 @@ public class SpringSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
 

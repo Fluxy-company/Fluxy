@@ -16,6 +16,9 @@ public class ProjetoService {
     ProjetoRepository projetoRepository;
 
     public void salvarProjeto(Projeto projeto) {
+        if (projeto.getEmpresa() == null || projeto.getEmpresa().getId() == null) {
+            throw new RecursoNaoEncontradoException("Empresa não informada ou inválida");
+        }
         projetoRepository.save(projeto);
     }
 

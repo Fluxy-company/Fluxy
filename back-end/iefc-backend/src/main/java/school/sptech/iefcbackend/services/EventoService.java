@@ -16,6 +16,9 @@ public class EventoService {
     EventoRepository eventoRepository;
 
     public void criarEvento(Eventos evento){
+        if (evento.getEmpresa() == null || evento.getEmpresa().getId() == null) {
+            throw new RecursoNaoEncontradoException("Empresa não informada ou inválida");
+        }
         eventoRepository.save(evento);
     }
 

@@ -3,8 +3,6 @@ package school.sptech.iefcbackend.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,28 +10,27 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.*;
-import school.sptech.iefcbackend.controllers.dto.LoginRequestDTO;
-import school.sptech.iefcbackend.controllers.dto.LoginResponseDTO;
+import school.sptech.iefcbackend.dto.LoginRequestDTO;
+import school.sptech.iefcbackend.dto.LoginResponseDTO;
 import school.sptech.iefcbackend.models.Role;
 import school.sptech.iefcbackend.repository.UsuarioRepository;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
 @CrossOrigin(origins = "*")
 @RestController
 @Tag(name = "Login", description = "Controller para autenticação de usuarios")
 @RequestMapping("/api/v1")
 public class TokenController {
 
+    private static final long TOKEN_EXPIRATION_SECONDS = 3600L;
+
     private final JwtEncoder jwtEncoder;
 
     private final UsuarioRepository usuarioRepository;
 
     private BCryptPasswordEncoder passwordEncoder;
-
 
     public TokenController(BCryptPasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository, JwtEncoder jwtEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -47,30 +44,27 @@ public class TokenController {
     @ApiResponse(responseCode = "500", description = "Erro de servidor / senha invalida")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest){
-        var usuario = usuarioRepository.findByEmail(loginRequest.email());
-        if(usuario.isEmpty() || !usuario.get().loginCorreto(loginRequest, passwordEncoder)){
-            throw new BadCredentialsException("Usuario ou senha invalido!");
-        }
+        var usuario = usuarioRepository.findByEmail(loginRequest.email())
+                .filter(user -> user.loginCorreto(loginRequest, passwordEncoder))
+                .orElseThrow(() -> new BadCredentialsException("Email ou senha invalidos."));
 
         var agora = Instant.now();
 
-        var expiraEm = 300L;
-
-        var escopo = usuario.get().getRoles()
+        var escopo = usuario.getRoles()
                 .stream()
-                .map(Role::getNome)
+                .map(Role::getAuthority)
                 .collect(Collectors.joining(" "));
 
         var claims = JwtClaimsSet.builder()
                 .issuer("iefcbackend")
-                .subject(usuario.get().getId().toString())
+                .subject(usuario.getId().toString())
                 .issuedAt(agora)
-                .expiresAt(agora.plusSeconds(expiraEm))
+                .expiresAt(agora.plusSeconds(TOKEN_EXPIRATION_SECONDS))
                 .claim("escopo", escopo)
                 .build();
 
         var jwtValor = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return  ResponseEntity.ok(new LoginResponseDTO(jwtValor, expiraEm));
+        return  ResponseEntity.ok(new LoginResponseDTO(jwtValor, TOKEN_EXPIRATION_SECONDS));
     }
 }

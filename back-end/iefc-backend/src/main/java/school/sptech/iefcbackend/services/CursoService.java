@@ -21,6 +21,9 @@ public class CursoService {
     }
 
     public Curso postar(Curso curso){
+        if (curso.getEmpresa() == null || curso.getEmpresa().getId() == null) {
+            throw new RecursoNaoEncontradoException("Empresa não informada ou inválida");
+        }
         Curso cursoNovo = new Curso();
         cursoNovo.setDescricao(curso.getDescricao());
         cursoNovo.setTitulo(curso.getTitulo());

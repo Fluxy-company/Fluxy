@@ -33,7 +33,6 @@ public class VideoService {
 
         videoEntity.setTitulo(video.getTitulo());
         videoEntity.setUrl(video.getUrl());
-        videoEntity.setUrl(video.getUrl());
         videoEntity.setCursos(video.getCursos());
 
         return repository.save(videoEntity);

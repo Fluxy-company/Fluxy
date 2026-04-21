@@ -31,4 +31,8 @@ public class Projeto {
 
     private String status;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
+
 }

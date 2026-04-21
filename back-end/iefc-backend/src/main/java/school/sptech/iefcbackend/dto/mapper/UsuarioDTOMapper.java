@@ -1,8 +1,8 @@
-package school.sptech.iefcbackend.controllers.dto.mapper;
+package school.sptech.iefcbackend.dto.mapper;
 
 import org.springframework.stereotype.Component;
-import school.sptech.iefcbackend.controllers.dto.UsuarioRequestDTO;
-import school.sptech.iefcbackend.controllers.dto.UsuarioResponseDTO;
+import school.sptech.iefcbackend.dto.UsuarioRequestDTO;
+import school.sptech.iefcbackend.dto.UsuarioResponseDTO;
 import school.sptech.iefcbackend.models.Usuario;
 
 @Component

@@ -1,4 +1,4 @@
-package school.sptech.iefcbackend.controllers.dto;
+package school.sptech.iefcbackend.dto;
 
 public record LoginRequestDTO(String email, String senha) {
 }
