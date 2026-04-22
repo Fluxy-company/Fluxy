@@ -1,10 +1,10 @@
-import HeroSection from '../components/heroSection/HeroSection'
+import Institucional from '../components/institucional'
 import './App.css'
 
 function App() {
   return (
     <>
-      <HeroSection/>
+      <Institucional />
     </>
   )
 }
