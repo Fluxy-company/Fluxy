@@ -5,12 +5,12 @@ export default function ValoresSection(){
     {
       titulo: "Missão",
       linkIcone: "../../src/assets/puzzle-missao.svg",
-      descricao: "Simplificar a rotina fiscal das empresas através de integrações inteligentes e automação de ponta.",
+      descricao: "Empoderar usuários a criar e evoluir seus próprios sistemas, com autonomia, flexibilidade e controle total sobre seus processos.",
     },
     {
       titulo: "Visão",
       linkIcone: "../../src/assets/target-visao.svg",
-      descricao: "Ser a plataforma referência no mercado para a gestão inteligente e estratégica de faturamento.",
+      descricao: "Ser a principal plataforma de criação e personalização de sistemas, onde cada usuário tem liberdade para construir soluções únicas.",
     },
     {
       titulo: "Valores",
