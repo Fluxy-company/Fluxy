@@ -33,7 +33,6 @@ build/
 .vscode/
 
 .env
-docker-compose.yml
 
 app.key
 app.pub
