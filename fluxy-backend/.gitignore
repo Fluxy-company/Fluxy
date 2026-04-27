@@ -33,7 +33,6 @@ build/
 .vscode/
 
 .env
-.env.exampple
 docker-compose.yml
 
 app.key
