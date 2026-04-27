@@ -1,18 +1,14 @@
-import Institucional from '../components/Institucional'
-import './App.css'
-import ListaEmpresas from './ListaEmpresas'
-import ListaUsuarios from './ListaUsuarios'
+import { Routes, Route } from "react-router-dom";
+import Institucional from "../components/Institucional";
+import Login from "../components/Login";
+import Cadastro from "../components/Cadastro";
 
-
-function App() {
+export default function App() {
   return (
-    <>
-      {/* <Institucional /> */}
-      { /*<ListaEmpresas /> */}
-      <ListaUsuarios/>
-  
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<Institucional />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/cadastro" element={<Cadastro />} />
+    </Routes>
+  );
 }
-
-export default App
