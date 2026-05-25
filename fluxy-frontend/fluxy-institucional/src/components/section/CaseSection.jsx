@@ -6,18 +6,17 @@ export default function CaseSection({
   descricao,
   imagem,
   links = [],
-  bgClass,
-  textClass,
   children
 }) {
+
   return (
-    <section className={`bg-${bgClass} max-h-133 flex items-center overflow-hidden text-${textClass}`}>
-      <Layout>
+    <section className={`max-h-133 flex items-center overflow-hidden`}>
+      <Layout> 
         <div className="flex items-center justify-between gap-12">
 
           <div className="flex flex-col gap-6 max-w-xl">
 
-            <h2 className="text-4xl md:text-5xl font-bold">
+            <h2 className={`text-4xl md:text-5xl font-bold`}>
               {titulo}
             </h2>
 

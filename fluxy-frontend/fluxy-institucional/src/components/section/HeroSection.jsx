@@ -1,6 +1,6 @@
 import Button from "../ui/Button";
 import Layout from "../layout/Layout";
-import logo from "../../src/assets/fluxy-claro.svg"
+import logo from "../../assets/fluxy-claro.svg"
 
 export default function HeroSection(){
   return (

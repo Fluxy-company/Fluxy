@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Navbar from "./layout/NavBar";
-import Footer from "./layout/Footer";
+import Navbar from "../components/layout/NavBar";
+import Footer from "../components/layout/Footer";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -40,18 +40,19 @@ export default function Login() {
   }
 
   return (
-    <>
+    <div>
       <Navbar />
 
-      <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-[#22344E] to-[#0E1116]">
+      <div className="min-h-screen flex justify-center items-center bg-linear-to-b from-[#22344E] to-[#0E1116]">
         
         <div className="w-full max-w-lg p-10 rounded-lg border-4 border-[#CAF0F8] text-[#D6D6D6] flex flex-col gap-4">
 
           <h1 className="text-3xl font-bold">Login</h1>
 
           <div className="flex flex-col gap-1">
-            <label>Email</label>
+            <label htmlFor="input_email">Email</label>
             <input
+              id="input_email"
               type="text"
               placeholder="Digite seu email"
               value={email}
@@ -61,8 +62,9 @@ export default function Login() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label>Senha</label>
+            <label htmlFor="input_senha">Senha</label>
             <input
+              id="input_senha"
               type="password"
               placeholder="Digite sua senha"
               value={senha}
@@ -89,6 +91,6 @@ export default function Login() {
       </div>
 
       <Footer />
-    </>
+    </div>
   );
 }

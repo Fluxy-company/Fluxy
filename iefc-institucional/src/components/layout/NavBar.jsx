@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-import logo from "../../src/assets/fluxy-claro.svg";
+import logo from "../../assets/logotipo-azul.svg";
+import { NavLink } from "react-router-dom";
 
 export default function Navbar({isFooter = false, children }) {
   const [active, setActive] = useState("#inicio");
-  const [scrolled, setScrolled] = useState(false);
 
   const NAV_LINKS = [
-    { label: "Início", href: "#inicio" },
-    { label: "Valores", href: "#valores" },
-    { label: "Quem somos", href: "#quem-somos" },
-    { label: "Quem transformamos", href: "#quem-transformamos" },
-    { label: "Saiba mais", href: "#saiba-mais" },
+    { label: "Início", href: "/#inicio" },
+    { label: "O que fazemos", href: "/#fazemos" },
+    { label: "Para quem é", href: "/#para-quem" },
+    { label: "Calendário de eventos", href: "/#calendario" },
   ];
 
   useEffect(() => {
@@ -23,10 +22,11 @@ export default function Navbar({isFooter = false, children }) {
     <nav
       className={`
         ${isFooter ? "relative" : "fixed top-0 left-0 right-0"}
-        z-100 flex items-center justify-between 
-        px-[clamp(1.5rem,5vw,3rem)] h-16
-        ${isFooter ? "" : "backdrop-blur-md"}
+        z-100 flex items-center justify-between
+        px-[clamp(1.5rem,5vw,3rem)] h-20
+        bg-[#E4E4F2] text-[#032738]
       `}
+
     >
         <img src={logo} alt="Logo" className="h-8 w-auto object-contain" />
 
@@ -38,18 +38,13 @@ export default function Navbar({isFooter = false, children }) {
             const isActive = active === link.href;
 
             return (
-              <a
+              <NavLink
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 onClick={() => setActive(link.href)}
-                className={`text-xl tracking-[0.01em] transition-colors duration-200 ${
-                  isActive
-                    ? "text-white font-bold"
-                    : "text-white/55 hover:text-white/85"
-                }`}
-              >
-                {link.label}
-              </a>
+                className={`text-xl font-semibold tracking-[0.01em] transition-colors duration-200`} >
+                  {link.label}
+              </NavLink>
             );
           })}
         </div>

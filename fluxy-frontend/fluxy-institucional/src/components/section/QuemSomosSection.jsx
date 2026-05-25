@@ -1,12 +1,12 @@
 import Layout from "../layout/Layout";
 import Titulo from "../ui/Titulo";
 
-import guilherme from "../../src/assets/guilherme.jpg";
-import lays from "../../src/assets/lays.jpg";
-import leandro from "../../src/assets/leandro.jpg";
-import maria from "../../src/assets/duda.jpg";
-import matheus from "../../src/assets/matheus.jpg";
-import rebeca from "../../src/assets/rebeca.jpg";
+import guilherme from "../../assets/guilherme.jpg";
+import lays from "../../assets/lays.jpg";
+import leandro from "../../assets/leandro.jpg";
+import maria from "../../assets/duda.jpg";
+import matheus from "../../assets/matheus.jpg";
+import rebeca from "../../assets/rebeca.jpg";
 
 const integrantes = [
   {

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Navbar from "./layout/NavBar";
-import Footer from "./layout/Footer";
+import Navbar from "../components/layout/NavBar";
+import Footer from "../components/layout/Footer";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -56,8 +56,9 @@ export default function Cadastro() {
           <h1 className="text-3xl font-bold">Cadastro</h1>
 
           <div className="flex flex-col gap-1">
-            <label>Nome</label>
+            <label htmlFor="input_nome">Nome</label>
             <input
+              id="input_nome"
               type="text"
               placeholder="Digite seu nome"
               value={nome}
@@ -67,8 +68,9 @@ export default function Cadastro() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label>Sobrenome</label>
+            <label htmlFor="input_sobrenome">Sobrenome</label>
             <input
+              id="input_sobrenome"
               type="text"
               placeholder="Digite seu sobrenome"
               value={sobrenome}
@@ -78,8 +80,9 @@ export default function Cadastro() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label>Email</label>
+            <label htmlFor="input_email">Email</label>
             <input
+              id="input_email"
               type="text"
               placeholder="Digite seu email"
               value={email}
@@ -89,8 +92,9 @@ export default function Cadastro() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label>Senha</label>
+            <label htmlFor="input_senha">Senha</label>
             <input
+              id="input_senha"
               type="password"
               placeholder="Digite sua senha"
               value={senha}
