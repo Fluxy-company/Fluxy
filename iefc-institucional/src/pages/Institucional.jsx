@@ -2,7 +2,11 @@ import Navbar from "../components/layout/NavBar";
 import Button from "../components/ui/Button";
 import HeroSection from "../components/sections/HeroSection";
 import MetricaSection from "../components/sections/MetricaSection";
-import OQueFazemosSection from "../components/sections/OQueFazemosSection";
+import OQueFazemosSection from "../components/sections/OQueFazemosSection"; 
+import ParaQuemSection from "../components/sections/ParaQuemSection";
+import ApoiadoresSection from "../components/sections/ApoiadoresSection";
+import EventosSection from "../components/sections/EventosSection";
+import Footer from "../components/layout/Footer";
 
 export default function Institucional(){
   return (
@@ -17,9 +21,16 @@ export default function Institucional(){
           Login
         </Button>
       </Navbar>
+      
       <HeroSection/>
       <MetricaSection />
       <OQueFazemosSection />
+      <ParaQuemSection /> 
+      <EventosSection /  >
+      <ApoiadoresSection />
+ 
+      <Footer />
+
     </div>
-  );
+  ); 
 }

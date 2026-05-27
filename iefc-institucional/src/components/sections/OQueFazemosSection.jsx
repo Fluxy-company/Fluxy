@@ -27,7 +27,7 @@ export default function OQueFazemosSection(){
   ];
 
   return (
-    <section className="bg-white py-16" id="o-que-fazemos">
+    <section className="bg-[#F9F9F9] py-16" id="o-que-fazemos">
       <Layout>
         <h2 className="text-3xl md:text-4xl font-bold text-[#032738] mb-10">
           O que fazemos
@@ -63,7 +63,7 @@ export default function OQueFazemosSection(){
         <div className="w-full flex justify-end mt-10">
           <a 
             href="#cursos" 
-            className="group flex items-center gap-2 text-lg font-medium text-[#032738] border-b-2 border-[#032738] pb-1 hover:text-blue-900 hover:border-blue-900 transition-colors"
+            className="group flex items-center gap-2 text-lg font-medium text-[#1D9291] border-b-2 border-[#032738] pb-1 hover:text-blue-900 hover:border-blue-900 transition-colors"
           >
             Conheça nossos cursos
 
