@@ -49,13 +49,21 @@ public class SpringSecurityConfig {
             "/api/v1/projetos/**",
             "/api/v1/projetos/nome/**",
             "/api/v1/projetos/dataInicio/**",
-            "/api/v1/projetos/status/**"
+            "/api/v1/projetos/status/**",
+            "/api/v1/cursos/**",
+            "/api/v1/videos/**",
+            "/api/v1/inscricoes/**",
+            "/api/v1/temas/**"
     };
 
     private static final String[] PUBLIC_WRITE_ROUTES = {
             "/api/v1/usuarios/**",
             "/api/v1/empresas/**",
             "/api/v1/projetos/**",
+            "/api/v1/cursos/**",
+            "/api/v1/videos/**",
+            "/api/v1/inscricoes/**",
+            "/api/v1/temas/**",
             "/api/v1/login"
     };
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 @Entity(name = "tb_curso")
 @Getter
@@ -24,6 +25,19 @@ public class Curso {
 
     @Column(name = "descricao", length = 255)
     private String descricao;
+
+    @Column(name = "instrutor", length = 100)
+    private String instrutor;
+
+    @Formula("(SELECT COUNT(*) FROM video v WHERE v.id_curso = curso_id)")
+    private Integer totalAulas;
+
+    @Column(name = "video_id", length = 20)
+    private String videoId;
+
+    @ManyToOne
+    @JoinColumn(name = "id_tema")
+    private Tema tema;
 
     @ManyToOne
     @JoinColumn(name = "id_empresa")

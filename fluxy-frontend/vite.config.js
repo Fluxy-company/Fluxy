@@ -12,6 +12,12 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '0.0.0.0',
       port: parseInt(env.VITE_APP_PORT),
+      proxy: {
+        '/api': {
+          target: 'http://backend:8080',
+          changeOrigin: true,
+        },
+      },
     },
   }
 })

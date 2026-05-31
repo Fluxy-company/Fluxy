@@ -17,7 +17,7 @@ export default function Login() {
       return;
     }
 
-    const resposta = await fetch("http://localhost:8080/api/v1/login", {
+    const resposta = await fetch("/api/v1/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

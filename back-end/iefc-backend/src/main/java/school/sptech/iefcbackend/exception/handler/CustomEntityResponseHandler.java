@@ -13,8 +13,12 @@ import school.sptech.iefcbackend.exception.RecursoNaoEncontradoException;
 
 import java.util.Date;
 
+import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
+
 @ControllerAdvice
 @RestController
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request){

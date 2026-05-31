@@ -5,7 +5,7 @@ export default function ListaUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
 
   async function buscarTodos() {
-    const resposta = await fetch("http://localhost:8080/api/v1/usuarios");
+    const resposta = await fetch("/api/v1/usuarios");
 
     console.log("Resposta da API");
     console.log("Endpoint:", resposta.url);
