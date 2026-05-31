@@ -9,19 +9,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.sptech.iefcbackend.models.Curso;
+import school.sptech.iefcbackend.models.Video;
 import school.sptech.iefcbackend.services.CursoService;
+import school.sptech.iefcbackend.services.VideoService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/cursos")
 @Tag(name = "Curso", description = "Controller para salvar e editar dados das cursos")
 public class CursoController {
 
     private final CursoService service;
+    private final VideoService videoService;
 
-    public CursoController(CursoService service) {
+    public CursoController(CursoService service, VideoService videoService) {
         this.service = service;
+        this.videoService = videoService;
     }
 
     @PostMapping
@@ -45,17 +50,47 @@ public class CursoController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar curso por id", description = "Método que busca a empresa pelo id")
-    @ApiResponse(responseCode = "200", description = "Empresa encontrada com sucesso")
+    @Operation(summary = "Buscar curso por id", description = "Método que busca o curso pelo id")
+    @ApiResponse(responseCode = "200", description = "Curso encontrado com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse id")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     public ResponseEntity<Curso> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
+    @GetMapping("/tema/{temaId}")
+    @Operation(summary = "Buscar cursos por tema", description = "Método que busca cursos pelo tema")
+    @ApiResponse(responseCode = "200", description = "Sucesso")
+    @ApiResponse(responseCode = "404", description = "Nenhum curso encontrado nesse tema")
+    @ApiResponse(responseCode = "500", description = "Erro de servidor")
+    public ResponseEntity<List<Curso>> buscarPorTema(@PathVariable Long temaId){
+        return ResponseEntity.ok(service.listarPorTema(temaId));
+    }
+
+    @GetMapping("/{id}/videos")
+    @Operation(summary = "Buscar videos de um curso", description = "Método que busca todos os videos de um curso")
+    @ApiResponse(responseCode = "200", description = "Sucesso")
+    @ApiResponse(responseCode = "404", description = "Nenhum video encontrado")
+    @ApiResponse(responseCode = "500", description = "Erro de servidor")
+    public ResponseEntity<List<Video>> buscarVideosPorCurso(@PathVariable Long id){
+        return ResponseEntity.ok(videoService.buscarPorCursoId(id));
+    }
+
+    @PostMapping("/{id}/videos")
+    @Operation(summary = "Adiciona um video a um curso", description = "Método que cria um video vinculado ao curso")
+    @ApiResponse(responseCode = "201", description = "Video criado com sucesso")
+    @ApiResponse(responseCode = "404", description = "Curso não encontrado")
+    @ApiResponse(responseCode = "500", description = "Erro de servidor")
+    public ResponseEntity<Video> adicionarVideo(@PathVariable Long id, @RequestBody Video video){
+        Curso curso = service.buscarPorId(id);
+        video.setCurso(curso);
+        videoService.salvarVideo(video);
+        return ResponseEntity.status(HttpStatus.CREATED).body(video);
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Deleta a curso pelo Id", description = "Método que deleta a curso pelo Id")
-    @ApiResponse(responseCode = "204", description = "Empresa deletada com sucesso")
+    @ApiResponse(responseCode = "204", description = "Curso deletado com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Id")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     public ResponseEntity<?> deletar(@PathVariable Long id){

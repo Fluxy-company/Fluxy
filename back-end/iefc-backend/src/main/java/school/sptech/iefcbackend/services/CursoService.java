@@ -20,19 +20,23 @@ public class CursoService {
         return repository.findAll();
     }
 
+    public List<Curso> listarPorTema(Long temaId){
+        return repository.findByTemaId(temaId);
+    }
+
     public Curso postar(Curso curso){
-        if (curso.getEmpresa() == null || curso.getEmpresa().getId() == null) {
-            throw new RecursoNaoEncontradoException("Empresa não informada ou inválida");
-        }
         Curso cursoNovo = new Curso();
         cursoNovo.setDescricao(curso.getDescricao());
         cursoNovo.setTitulo(curso.getTitulo());
+        cursoNovo.setInstrutor(curso.getInstrutor());
+        cursoNovo.setVideoId(curso.getVideoId());
+        cursoNovo.setTema(curso.getTema());
         cursoNovo.setEmpresa(curso.getEmpresa());
         return repository.save(cursoNovo);
     }
 
     public Curso buscarPorId(Long id){
-        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Não foi possível o curso desejado"));
+        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Não foi possível encontrar o curso desejado"));
     }
 
     public void delete(Long id){
@@ -44,6 +48,9 @@ public class CursoService {
         cursoNovo.setEmpresa(curso.getEmpresa());
         cursoNovo.setDescricao(curso.getDescricao());
         cursoNovo.setTitulo(curso.getTitulo());
+        cursoNovo.setInstrutor(curso.getInstrutor());
+        cursoNovo.setVideoId(curso.getVideoId());
+        cursoNovo.setTema(curso.getTema());
         return repository.save(cursoNovo);
     }
 }
