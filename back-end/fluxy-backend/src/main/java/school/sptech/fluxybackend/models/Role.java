@@ -33,7 +33,6 @@ public class Role {
         this.nome = nome;
     }
 
-
     public enum Valores{
         ADMIN(1L),
         BASIC(2L);

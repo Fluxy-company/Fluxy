@@ -17,10 +17,10 @@ public class Empresa {
     private Long idEmpresa;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    @Column
+    @Column(nullable = false)
     private String nome;
 
     @Column(nullable = false, unique = true)

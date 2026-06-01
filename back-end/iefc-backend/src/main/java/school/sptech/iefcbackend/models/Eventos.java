@@ -30,8 +30,13 @@ public class Eventos {
     @Column
     private String descricao;
 
-    @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Eventos.StatusEventos status;
+
+    public enum StatusEventos {
+        ATIVO, FECHADO, CANCELADO, EM_ANALISE
+    }
 
     @ManyToOne
     @JoinColumn(name = "empresa_id")

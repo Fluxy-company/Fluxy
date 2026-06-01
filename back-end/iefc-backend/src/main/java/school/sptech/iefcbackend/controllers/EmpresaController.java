@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import school.sptech.iefcbackend.models.Empresa;
 import school.sptech.iefcbackend.services.EmpresaService;
@@ -23,6 +24,7 @@ public class EmpresaController {
     private EmpresaService empresaService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Salva os dados da empresa", description = "Método que salva os dados da empresa")
     @ApiResponse(responseCode = "201",
             content = @Content(schema = @Schema(implementation = Empresa.class)),
@@ -35,6 +37,7 @@ public class EmpresaController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_BASIC')")
     @Operation(summary = "Busca todas as empresas", description = "Método que busca todas as empresas")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Nenhuma empresa encontrada")
@@ -44,6 +47,7 @@ public class EmpresaController {
     }
 
     @GetMapping(value = "/{cnpj}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Buscar empresa por Cnpj", description = "Método que busca a empresa pelo cnpj")
     @ApiResponse(responseCode = "200", description = "Empresa encontrada com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Cnpj")
@@ -54,6 +58,7 @@ public class EmpresaController {
 
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Edita os dados da empresa pelo Id", description = "Método que edita os dados da empresa pelo Id")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Id")
@@ -64,6 +69,7 @@ public class EmpresaController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Deleta a empresa pelo Id", description = "Método que deleta a empresa pelo Id")
     @ApiResponse(responseCode = "204", description = "Empresa deletada com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Id")

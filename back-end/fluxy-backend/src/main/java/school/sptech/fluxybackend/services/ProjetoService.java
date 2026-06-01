@@ -1,22 +1,24 @@
 package school.sptech.fluxybackend.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import school.sptech.fluxybackend.exception.RecursoNaoEncontradoException;
 import school.sptech.fluxybackend.models.Projeto;
 import school.sptech.fluxybackend.repository.ProjetoRepository;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class ProjetoService {
 
-    @Autowired
-    ProjetoRepository projetoRepository;
+    private final ProjetoRepository projetoRepository;
 
-    public void salvarProjeto(Projeto projeto) {
-        projetoRepository.save(projeto);
+    public ProjetoService(ProjetoRepository projetoRepository) {
+        this.projetoRepository = projetoRepository;
+    }
+
+    public Projeto salvarProjeto(Projeto projeto) {
+        return projetoRepository.save(projeto);
     }
 
     public List<Projeto> buscarTodos() { return projetoRepository.findAll(); }
@@ -27,7 +29,7 @@ public class ProjetoService {
         );
     }
 
-    public List<Projeto> buscarProjetoPorDataInicio(Date dataInicio){
+    public List<Projeto> buscarProjetoPorDataInicio(LocalDate dataInicio){
         List<Projeto> projetos = projetoRepository.findAllByDataInicio(dataInicio);
 
         if (projetos.isEmpty()) {
@@ -38,7 +40,13 @@ public class ProjetoService {
     }
 
     public List<Projeto> buscarProjetoPorStatus(String status){
-        List<Projeto> projetos = projetoRepository.findAllByStatus(status);
+        Projeto.StatusProjeto statusEnum;
+        try {
+            statusEnum = Projeto.StatusProjeto.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Status inválido: " + status);
+        }
+        List<Projeto> projetos = projetoRepository.findAllByStatus(statusEnum);
 
         if (projetos.isEmpty()) {
             throw new RecursoNaoEncontradoException("Nenhum projeto foi encontrado com o status informado.");

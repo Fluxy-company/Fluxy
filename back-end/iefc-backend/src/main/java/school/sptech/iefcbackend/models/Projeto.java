@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity(name = "tb_projeto")
 @NoArgsConstructor
@@ -25,11 +25,17 @@ public class Projeto {
 
     private String descricao;
 
-    private Date dataInicio;
+    private LocalDate dataInicio;
 
-    private Date dataFim;
+    private LocalDate dataFim;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusProjeto status;
+
+    public enum StatusProjeto {
+        EM_ANDAMENTO, CONCLUIDO, CANCELADO, PENDENTE
+    }
 
     @ManyToOne
     @JoinColumn(name = "empresa_id")

@@ -30,8 +30,9 @@ public class Usuario {
 
 @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 @JoinTable(
-        joinColumns = @JoinColumn,
-        inverseJoinColumns = @JoinColumn
+        name = "tb_usuario_roles",
+        joinColumns = @JoinColumn(name = "id_usuario"),
+        inverseJoinColumns = @JoinColumn(name = "id_role")
 )
     private Set<Role> roles;
 

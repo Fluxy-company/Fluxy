@@ -52,24 +52,14 @@ public class SpringSecurityConfig {
             "/api/v1/projetos/status/**"
     };
 
-    private static final String[] PUBLIC_WRITE_ROUTES = {
-            "/api/v1/usuarios/**",
-            "/api/v1/empresas/**",
-            "/api/v1/projetos/**",
-            "/api/v1/login"
-    };
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(SWAGGER_ROUTES).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_GET_ROUTES).permitAll()
-                        .requestMatchers(HttpMethod.POST, PUBLIC_WRITE_ROUTES).permitAll()
-                        .requestMatchers(HttpMethod.PUT, PUBLIC_WRITE_ROUTES).permitAll()
-                        .requestMatchers(HttpMethod.DELETE, PUBLIC_WRITE_ROUTES).permitAll()
-
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())

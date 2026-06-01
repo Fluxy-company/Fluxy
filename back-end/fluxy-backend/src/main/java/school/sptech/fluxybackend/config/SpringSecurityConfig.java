@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,33 +56,8 @@ public class SpringSecurityConfig {
 
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(ROUTE_PERMIT).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/email").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/empresas/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/empresas/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/empresas").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/empresas/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/nome/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/dataInicio/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/status/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/projetos/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/projetos/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/projetos").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/projetos/**").permitAll()
-
+                        .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
@@ -100,6 +77,13 @@ public class SpringSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+                .role("ADMIN").implies("BASIC")
+                .build();
     }
 
     @Bean

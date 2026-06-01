@@ -24,18 +24,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1")
 public class TokenController {
 
-    private static final long TOKEN_EXPIRATION_SECONDS = 3600L;
-
     private final JwtEncoder jwtEncoder;
 
     private final UsuarioRepository usuarioRepository;
 
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public TokenController(BCryptPasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository, JwtEncoder jwtEncoder) {
-        this.passwordEncoder = passwordEncoder;
-        this.usuarioRepository = usuarioRepository;
+    public TokenController(JwtEncoder jwtEncoder, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
         this.jwtEncoder = jwtEncoder;
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Operation(summary = "Login", description = "Método que realiza o login dos usuarios")
@@ -50,6 +48,8 @@ public class TokenController {
 
         var agora = Instant.now();
 
+        var expiraEm = 3600L;
+
         var escopo = usuario.getRoles()
                 .stream()
                 .map(Role::getAuthority)
@@ -59,12 +59,12 @@ public class TokenController {
                 .issuer("iefcbackend")
                 .subject(usuario.getId().toString())
                 .issuedAt(agora)
-                .expiresAt(agora.plusSeconds(TOKEN_EXPIRATION_SECONDS))
-                .claim("escopo", escopo)
+                .expiresAt(agora.plusSeconds(expiraEm))
+                .claim("scope", escopo)
                 .build();
 
         var jwtValor = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return  ResponseEntity.ok(new LoginResponseDTO(jwtValor, TOKEN_EXPIRATION_SECONDS));
+        return  ResponseEntity.ok(new LoginResponseDTO(jwtValor, expiraEm));
     }
 }

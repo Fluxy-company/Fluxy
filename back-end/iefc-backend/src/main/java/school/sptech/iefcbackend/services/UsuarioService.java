@@ -1,6 +1,6 @@
 package school.sptech.iefcbackend.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import school.sptech.iefcbackend.dto.UsuarioRequestDTO;
 import school.sptech.iefcbackend.dto.UsuarioResponseDTO;
@@ -16,11 +16,15 @@ import java.util.List;
 @Service
 public class UsuarioService {
 
-    @Autowired
-    UsuarioRepository repository;
+    private final UsuarioRepository repository;
+    private final UsuarioDTOMapper mapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UsuarioDTOMapper mapper;
+    public UsuarioService(UsuarioRepository repository, UsuarioDTOMapper mapper, BCryptPasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public List<UsuarioResponseDTO> buscarTodos(){
        List<Usuario> usuarios = repository.findAll();
@@ -29,13 +33,13 @@ public class UsuarioService {
        for(Usuario usuario : usuarios){
            dtos.add(mapper.toDTO(usuario));
        }
-                return dtos;
+       return dtos;
     }
 
     public UsuarioResponseDTO acharPeloId(Long id){
        Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Sem registros nesse id"));
-    return mapper.toDTO(usuario);
+       return mapper.toDTO(usuario);
     }
     
     public UsuarioResponseDTO buscarUsuarioPorEmail(String email){
@@ -50,6 +54,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = mapper.toEntity(dto);
+        usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         usuario.setCreatedAt(System.currentTimeMillis());
         Usuario saved = repository.save(usuario);
         return mapper.toDTO(saved);
@@ -58,10 +63,18 @@ public class UsuarioService {
     public UsuarioResponseDTO atualizarUsuarioPorId(Long id, UsuarioRequestDTO dto){
        Usuario entity = repository.findById(id)
            .orElseThrow(() -> new RecursoNaoEncontradoException("Não existe"));
+       
+       if (!entity.getEmail().equals(dto.getEmail()) && repository.existsByEmail(dto.getEmail())) {
+           throw new EmailJaCadastradoException("Email já cadastrado por outro usuário");
+       }
+       
        entity.setNome(dto.getNome());
        entity.setSobrenome(dto.getSobrenome());
        entity.setEmail(dto.getEmail());
-
+       // Atualizar senha se fornecida
+       if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+           entity.setSenha(passwordEncoder.encode(dto.getSenha()));
+       }
 
        Usuario saved = repository.save(entity);
        return mapper.toDTO(saved);

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import school.sptech.iefcbackend.models.Curso;
 import school.sptech.iefcbackend.services.CursoService;
@@ -25,6 +26,7 @@ public class CursoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Salva os dados da cursos", description = "Método que salva os dados da cursos")
     @ApiResponse(responseCode = "201",
             content = @Content(schema = @Schema(implementation = Curso.class)),
@@ -36,6 +38,7 @@ public class CursoController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Busca todas as curso", description = "Método que busca todas as curso")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Nenhum curso encontrada")
@@ -45,6 +48,7 @@ public class CursoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Buscar curso por id", description = "Método que busca a empresa pelo id")
     @ApiResponse(responseCode = "200", description = "Empresa encontrada com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse id")
@@ -54,6 +58,7 @@ public class CursoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Deleta a curso pelo Id", description = "Método que deleta a curso pelo Id")
     @ApiResponse(responseCode = "204", description = "Empresa deletada com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Id")
@@ -64,6 +69,7 @@ public class CursoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Edita os dados da curso pelo Id", description = "Método que edita os dados da curso pelo Id")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Id")

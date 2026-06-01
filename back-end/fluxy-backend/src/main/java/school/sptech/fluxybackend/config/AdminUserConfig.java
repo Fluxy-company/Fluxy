@@ -1,9 +1,6 @@
 package school.sptech.fluxybackend.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,15 +12,11 @@ import school.sptech.fluxybackend.repository.UsuarioRepository;
 import java.util.Set;
 
 @Configuration
-@Getter
-@Setter
 public class AdminUserConfig implements CommandLineRunner {
 
-    private RoleRepository roleRepository;
-
-    private UsuarioRepository usuarioRepository;
-
-    private BCryptPasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public AdminUserConfig(RoleRepository roleRepository, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
@@ -48,6 +41,7 @@ public class AdminUserConfig implements CommandLineRunner {
                     usuario.setSenha(passwordEncoder.encode("senha123"));
                     usuario.setRoles(Set.of(roleAdmin));
                     usuarioRepository.save(usuario);
+                    System.out.println("Admin criado com sucesso");
                 });
     }
 }

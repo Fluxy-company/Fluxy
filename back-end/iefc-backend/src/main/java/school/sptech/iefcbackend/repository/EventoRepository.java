@@ -10,5 +10,5 @@ public interface EventoRepository extends JpaRepository<Eventos, Long> {
 
     List<Eventos> findByData(LocalDate data);
 
-    List<Eventos> findByStatus(String status);
+    List<Eventos> findByStatus(Eventos.StatusEventos status);
 }

@@ -1,6 +1,5 @@
 package school.sptech.fluxybackend.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import school.sptech.fluxybackend.exception.RecursoNaoEncontradoException;
 import school.sptech.fluxybackend.models.Empresa;
@@ -13,15 +12,17 @@ import java.util.List;
 @Service
 public class EmpresaService {
 
-    @Autowired
-    EmpresaRepository empresaRepository;
+    private final EmpresaRepository empresaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    UsuarioRepository usuarioRepository;
+    public EmpresaService(EmpresaRepository empresaRepository, UsuarioRepository usuarioRepository) {
+        this.empresaRepository = empresaRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
-    public void salvarEmpresa(Empresa empresa){
+    public Empresa salvarEmpresa(Empresa empresa){
         empresa.setUsuario(buscarUsuarioValido(empresa.getUsuario()));
-        empresaRepository.save(empresa);
+        return empresaRepository.save(empresa);
     }
 
     public List<Empresa> buscarTodos() {
@@ -34,7 +35,7 @@ public class EmpresaService {
         );
     }
 
-    public void atualizarPorId(Long id, Empresa empresa){
+    public Empresa atualizarPorId(Long id, Empresa empresa){
         Empresa empresaEntity = empresaRepository.findById(id).orElseThrow(()
         -> new RecursoNaoEncontradoException("Empresa não encontrada"));
         empresaEntity.setNome(empresa.getNome());
@@ -42,7 +43,7 @@ public class EmpresaService {
         empresaEntity.setTelefone(empresa.getTelefone());
         empresaEntity.setUsuario(buscarUsuarioValido(empresa.getUsuario()));
 
-        empresaRepository.save(empresaEntity);
+        return empresaRepository.save(empresaEntity);
     }
 
     public void deletarPorId(Long id){

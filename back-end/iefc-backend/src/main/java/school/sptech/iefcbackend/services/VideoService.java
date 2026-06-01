@@ -1,6 +1,5 @@
 package school.sptech.iefcbackend.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import school.sptech.iefcbackend.exception.RecursoNaoEncontradoException;
 import school.sptech.iefcbackend.models.Video;
@@ -11,11 +10,14 @@ import java.util.List;
 @Service
 public class VideoService {
 
-    @Autowired
-    VideoRepository repository;
+    private final VideoRepository repository;
 
-    public void salvarVideo(Video video){
-        repository.save(video);
+    public VideoService(VideoRepository repository) {
+        this.repository = repository;
+    }
+
+    public Video salvarVideo(Video video){
+        return repository.save(video);
     }
 
     public List<Video> buscarTodos(){

@@ -3,12 +3,9 @@ package school.sptech.fluxybackend.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -21,8 +18,6 @@ import school.sptech.fluxybackend.repository.UsuarioRepository;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
 @CrossOrigin(origins = "*")
 @RestController
 @Tag(name = "Login", description = "Controller para autenticação de usuarios")
@@ -33,8 +28,7 @@ public class TokenController {
 
     private final UsuarioRepository usuarioRepository;
 
-    private BCryptPasswordEncoder passwordEncoder;
-
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public TokenController(BCryptPasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository, JwtEncoder jwtEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -50,12 +44,12 @@ public class TokenController {
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest){
         var usuario = usuarioRepository.findByEmail(loginRequest.email());
         if(usuario.isEmpty() || !usuario.get().loginCorreto(loginRequest, passwordEncoder)){
-            throw new BadCredentialsException("Usuario ou senha invalido!");
+            throw new BadCredentialsException("Email ou senha invalidos.");
         }
 
         var agora = Instant.now();
 
-        var expiraEm = 300L;
+        var expiraEm = 3600L;
 
         var escopo = usuario.get().getRoles()
                 .stream()
@@ -67,7 +61,7 @@ public class TokenController {
                 .subject(usuario.get().getIdUsuario().toString())
                 .issuedAt(agora)
                 .expiresAt(agora.plusSeconds(expiraEm))
-                .claim("escopo", escopo)
+                .claim("scope", escopo)
                 .build();
 
         var jwtValor = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
