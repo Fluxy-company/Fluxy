@@ -26,10 +26,24 @@ public class AdminUserConfig implements CommandLineRunner {
                     admin.setNome("Admin");
                     admin.setSobrenome("Administrador");
                     admin.setEmail("admin@admin.com");
-                    admin.setSenha(passwordEncoder.encode("admin123"));
+                    admin.setSenha(passwordEncoder.encode("Admin@123"));
                     admin.setRoles(Set.of(Role.ADMIN));
                     usuarioRepository.save(admin);
                     System.out.println("Admin criado com sucesso.");
+                }
+        );
+
+        usuarioRepository.findByEmail("user@user.com").ifPresentOrElse(
+                user -> System.out.println("User já existe, pulando criação."),
+                () -> {
+                    var basicUser = new Usuario();
+                    basicUser.setNome("User");
+                    basicUser.setSobrenome("Padrão");
+                    basicUser.setEmail("user@user.com");
+                    basicUser.setSenha(passwordEncoder.encode("User@123"));
+                    basicUser.setRoles(Set.of(Role.BASIC));
+                    usuarioRepository.save(basicUser);
+                    System.out.println("User criado com sucesso.");
                 }
         );
     }

@@ -17,7 +17,7 @@ export default function Login() {
 
     const usuario = { email, senha };
 
-    const resposta = await fetch("http://localhost:8080/api/v1/login", {
+    const resposta = await fetch("/api/v1/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function Login() {
       const data = await resposta.json();
       localStorage.setItem("token", data.token);
       setMensagem("Login realizado com sucesso!");
-      setTimeout(() => navigate("/listagem-usuarios"), 1000);
+      setTimeout(() => navigate("/meus-cursos"), 1000);
     } else {
       console.log("Erro no login:", resposta.statusText);
       setMensagem("Email ou senha inválidos");

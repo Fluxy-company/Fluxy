@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import school.sptech.iefcbackend.models.Video;
 import school.sptech.iefcbackend.services.VideoService;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/videos")
@@ -23,6 +25,15 @@ public class VideoController {
     public VideoController(VideoService service) {
         this.service = service;
     }
+
+    @GetMapping
+    @Operation(summary = "Busca todos os videos", description = "Método que busca todos os videos")
+    @ApiResponse(responseCode = "200", description = "Sucesso")
+    @ApiResponse(responseCode = "500", description = "Erro de servidor")
+    public ResponseEntity<List<Video>> listarTodos(){
+        return ResponseEntity.ok(service.buscarTodos());
+    }
+   
 
     @PostMapping
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
@@ -49,10 +60,10 @@ public class VideoController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Deletar video pelo id", description = "Método que deleta os videos pelo id")
-    @ApiResponse(responseCode = "200", description = "Video deletado com sucesso")
+    @ApiResponse(responseCode = "204", description = "Video deletado com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem video nesse id")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
-    public ResponseEntity<Void> deletarPorId(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deletarPorId(@PathVariable Long id){
         service.deletarPorId(id);
         return ResponseEntity.noContent().build();
     }

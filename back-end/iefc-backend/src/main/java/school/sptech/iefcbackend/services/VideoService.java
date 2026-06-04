@@ -24,9 +24,13 @@ public class VideoService {
         return repository.findAll();
     }
 
+    public List<Video> buscarPorCursoId(Long cursoId){
+        return repository.findByCursoIdOrderByOrdem(cursoId);
+    }
+
     public Video buscarVideoPeloTitulo(String titulo){
         return repository.findByTitulo(titulo)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhum evento enconrado com esse titulo"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Nenhum video encontrado com esse titulo"));
     }
 
     public Video atualizarPeloId(Long id, Video video){
@@ -35,7 +39,11 @@ public class VideoService {
 
         videoEntity.setTitulo(video.getTitulo());
         videoEntity.setUrl(video.getUrl());
-        videoEntity.setCursos(video.getCursos());
+        videoEntity.setVideoId(video.getVideoId());
+        videoEntity.setDuracao(video.getDuracao());
+        videoEntity.setModulo(video.getModulo());
+        videoEntity.setOrdem(video.getOrdem());
+        videoEntity.setCurso(video.getCurso());
 
         return repository.save(videoEntity);
     }
@@ -43,7 +51,7 @@ public class VideoService {
     public void deletarPorId(Long id){
         Video video = repository.findById(id)
                 .orElseThrow(
-                        () -> new RecursoNaoEncontradoException("Nenhum event encontrado com esse id"));
+                        () -> new RecursoNaoEncontradoException("Nenhum video encontrado com esse id"));
         repository.delete(video);
     }
 }
