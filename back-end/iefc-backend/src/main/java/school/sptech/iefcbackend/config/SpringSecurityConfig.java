@@ -75,6 +75,7 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_GET_ROUTES).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/relatorio/gerar").permitAll()
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
