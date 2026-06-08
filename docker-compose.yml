@@ -28,14 +28,24 @@ services:
       - "8080:8080"
     volumes:
       - ./back-end/iefc-backend:/app
+      - maven_cache:/root/.m2
     environment:
       DATABASE_URL: jdbc:postgresql://database:5432/${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      MAILTRAP_USERNAME: ${MAILTRAP_USERNAME}
+      MAILTRAP_PASSWORD: ${MAILTRAP_PASSWORD}
+      RELATORIO_EMAIL_DESTINATARIO: ${RELATORIO_EMAIL_DESTINATARIO}
       APP_PORT: 8080
     depends_on:
       database:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
     networks:
       - fluxy-network
 
@@ -53,12 +63,34 @@ services:
       VITE_APP_PORT: 5173
       VITE_API_URL: http://localhost:8080/api/v1
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    networks:
+      - fluxy-network
+
+  iefc-frontend:
+    container_name: iefc_frontend
+    build:
+      context: ./iefc-institucional
+      dockerfile: Dockerfile
+    ports:
+      - "5174:5174"
+    volumes:
+      - ./iefc-institucional:/app
+      - /app/node_modules
+    environment:
+      VITE_APP_PORT: 5174
+      VITE_API_URL: http://localhost:8080/api/v1
+    depends_on:
+      backend:
+        condition: service_healthy
     networks:
       - fluxy-network
 
 volumes:
   postgres_data:
+    driver: local
+  maven_cache:
     driver: local
 
 networks:
