@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
       port: parseInt(env.VITE_APP_PORT),
       proxy: {
         '/api': {
-          target: 'http://backend:8080',
+          target: 'http://localhost:8080',
           changeOrigin: true,
         },
       },

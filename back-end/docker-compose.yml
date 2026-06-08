@@ -12,7 +12,7 @@ services:
     volumes:
       - iefc-db-data:/var/lib/postgresql/data
     networks:
-      - iefc-network
+      - app-network
   fluxy-db:
     image: postgres
     container_name: fluxy_container
@@ -26,14 +26,14 @@ services:
     volumes:
       - fluxy-db-data:/var/lib/postgresql/data
     networks:
-      - fluxy-network
+      - app-network
   iefc-api:
     container_name: iefc_backend
     build:
       context: ./iefc-backend
       dockerfile: Dockerfile
     ports:
-      - ${IEFC_APP_PORT}:${IEFC_APP_PORT}
+      - ${IEFC_APP_PORT}:8080
     volumes:
       - ./iefc-backend:/app
     env_file:
@@ -41,14 +41,14 @@ services:
     depends_on:
       - iefc-db
     networks:
-      - iefc-network
+      - app-network
   fluxy-api:
     container_name: fluxy-backend
     build:
       context: ./fluxy-backend
       dockerfile: Dockerfile
     ports:
-      - ${FLUXY_APP_PORT}:${FLUXY_APP_PORT}
+      - ${FLUXY_APP_PORT}:8080
     volumes:
       - ./fluxy-backend:/app
     env_file:
@@ -56,13 +56,11 @@ services:
     depends_on:
       - fluxy-db
     networks:
-      - fluxy-network
+      - app-network
 volumes:
   iefc-db-data:
   fluxy-db-data:
 
 networks:
-  fluxy-network:
-    driver: bridge
-  iefc-network:
+  app-network:
     driver: bridge
