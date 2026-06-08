@@ -176,7 +176,6 @@ class UsuarioServiceTest {
     @DisplayName("atualizarUsuarioPorId deve atualizar os dados do usuário")
     void atualizarUsuarioPorIdDeveAtualizar() {
         when(repository.findById(1L)).thenReturn(Optional.of(usuario));
-        when(repository.existsByEmail("maria@email.com")).thenReturn(false);
         when(passwordEncoder.encode("senha123")).thenReturn("hash_senha");
         when(repository.save(any(Usuario.class))).thenReturn(usuario);
         when(mapper.toDTO(usuario)).thenReturn(responseDTO);
