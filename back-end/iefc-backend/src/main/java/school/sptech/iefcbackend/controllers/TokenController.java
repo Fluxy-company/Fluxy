@@ -30,7 +30,7 @@ public class TokenController {
 
     private final UsuarioRepository usuarioRepository;
 
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public TokenController(BCryptPasswordEncoder passwordEncoder, UsuarioRepository usuarioRepository, JwtEncoder jwtEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -60,7 +60,7 @@ public class TokenController {
                 .subject(usuario.getId().toString())
                 .issuedAt(agora)
                 .expiresAt(agora.plusSeconds(TOKEN_EXPIRATION_SECONDS))
-                .claim("escopo", escopo)
+                .claim("scope", escopo)
                 .build();
 
         var jwtValor = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

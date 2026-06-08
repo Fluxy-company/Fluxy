@@ -5,8 +5,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import school.sptech.iefcbackend.models.Empresa;
 import school.sptech.iefcbackend.services.EmpresaService;
@@ -19,22 +20,27 @@ import java.util.List;
 @Tag(name = "Empresas", description = "Controller para salvar e editar dados das empresas")
 public class EmpresaController {
 
-    @Autowired
-    private EmpresaService empresaService;
+    private final EmpresaService empresaService;
+
+    public EmpresaController(EmpresaService empresaService) {
+        this.empresaService = empresaService;
+    }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Salva os dados da empresa", description = "Método que salva os dados da empresa")
     @ApiResponse(responseCode = "201",
             content = @Content(schema = @Schema(implementation = Empresa.class)),
             description = "Empresa criada com sucesso")
     @ApiResponse(responseCode = "409", description = "Cnpj ja cadastrado")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
-    public ResponseEntity<Void> salvarEmpresa(@RequestBody Empresa empresa){
-        empresaService.salvarEmpresa(empresa);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<Empresa> salvarEmpresa(@RequestBody Empresa empresa){
+        Empresa saved = empresaService.salvarEmpresa(empresa);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('BASIC')")
     @Operation(summary = "Busca todas as empresas", description = "Método que busca todas as empresas")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Nenhuma empresa encontrada")
@@ -44,6 +50,7 @@ public class EmpresaController {
     }
 
     @GetMapping(value = "/{cnpj}")
+    @PreAuthorize("hasRole('BASIC')")
     @Operation(summary = "Buscar empresa por Cnpj", description = "Método que busca a empresa pelo cnpj")
     @ApiResponse(responseCode = "200", description = "Empresa encontrada com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Cnpj")
@@ -54,16 +61,18 @@ public class EmpresaController {
 
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Edita os dados da empresa pelo Id", description = "Método que edita os dados da empresa pelo Id")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Id")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     public ResponseEntity<Empresa> atualizarPorId(@PathVariable Long id, @RequestBody Empresa empresa){
-        empresaService.atualizarPorId(id, empresa);
-        return ResponseEntity.ok().build();
+        Empresa updated = empresaService.atualizarPorId(id, empresa);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Deleta a empresa pelo Id", description = "Método que deleta a empresa pelo Id")
     @ApiResponse(responseCode = "204", description = "Empresa deletada com sucesso")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse Id")
