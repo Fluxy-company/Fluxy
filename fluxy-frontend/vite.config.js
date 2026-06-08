@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: 'http://localhost:8080',
           changeOrigin: true,
+          proxyTimeout: 180000,
+          timeout: 180000,
         },
       },
     },

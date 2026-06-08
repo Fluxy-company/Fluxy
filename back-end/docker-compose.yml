@@ -22,7 +22,7 @@ services:
       POSTGRES_DB: ${FLUXY_DATABASE_NAME}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-     - "5433:5432"
+      - "5433:5432"
     volumes:
       - fluxy-db-data:/var/lib/postgresql/data
     networks:
@@ -38,6 +38,9 @@ services:
       - ./iefc-backend:/app
     env_file:
       - .env
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     depends_on:
       - iefc-db
     networks:

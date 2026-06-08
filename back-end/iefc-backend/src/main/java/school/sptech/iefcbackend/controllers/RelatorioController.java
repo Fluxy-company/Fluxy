@@ -3,6 +3,7 @@ package school.sptech.iefcbackend.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class RelatorioController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_PDF_VALUE
     )
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(
             summary = "Gerar Relatório PDF",
             description = "Recebe os dados do relatório via multipart/form-data e retorna um PDF"

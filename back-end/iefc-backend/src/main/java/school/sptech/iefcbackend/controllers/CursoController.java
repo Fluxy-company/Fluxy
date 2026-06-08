@@ -43,7 +43,7 @@ public class CursoController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_BASIC')")
     @Operation(summary = "Busca todas as curso", description = "Método que busca todas as curso")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Nenhum curso encontrada")
@@ -55,7 +55,7 @@ public class CursoController {
     @GetMapping("/{id}")
     @Operation(summary = "Buscar curso por id", description = "Método que busca o curso pelo id")
     @ApiResponse(responseCode = "200", description = "Curso encontrado com sucesso")
-    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_BASIC')")
     @ApiResponse(responseCode = "404", description = "Sem registros nesse id")
     @ApiResponse(responseCode = "500", description = "Erro de servidor")
     public ResponseEntity<Curso> buscarPorId(@PathVariable Long id){
@@ -81,6 +81,7 @@ public class CursoController {
     }
 
     @PostMapping("/{id}/videos")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Adiciona um video a um curso", description = "Método que cria um video vinculado ao curso")
     @ApiResponse(responseCode = "201", description = "Video criado com sucesso")
     @ApiResponse(responseCode = "404", description = "Curso não encontrado")

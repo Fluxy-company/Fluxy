@@ -56,17 +56,6 @@ public class SpringSecurityConfig {
             "/api/v1/temas/**"
     };
 
-    private static final String[] PUBLIC_WRITE_ROUTES = {
-            "/api/v1/usuarios/**",
-            "/api/v1/empresas/**",
-            "/api/v1/projetos/**",
-            "/api/v1/cursos/**",
-            "/api/v1/videos/**",
-            "/api/v1/inscricoes/**",
-            "/api/v1/temas/**",
-            "/api/v1/login"
-    };
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
@@ -75,7 +64,6 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_GET_ROUTES).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/relatorio/gerar").permitAll()
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())

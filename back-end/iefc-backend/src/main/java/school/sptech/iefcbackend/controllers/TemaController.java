@@ -2,6 +2,7 @@ package school.sptech.iefcbackend.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import school.sptech.iefcbackend.models.Tema;
 import school.sptech.iefcbackend.services.TemaService;
@@ -30,16 +31,19 @@ public class TemaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public ResponseEntity<Tema> criar(@RequestBody Tema tema) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(tema));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public ResponseEntity<Tema> atualizar(@PathVariable Long id, @RequestBody Tema tema) {
         return ResponseEntity.ok(service.atualizar(id, tema));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public ResponseEntity<?> deletar(@PathVariable Long id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();

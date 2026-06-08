@@ -35,7 +35,7 @@ public class EmpresaService {
     }
 
     public void atualizarPorId(Long id, Empresa empresa){
-        Empresa empresaEntity = empresaRepository.findById(id).orElseThrow(()
+        Empresa empresaEntity = empresaRepository.findById(id).orElseThrow(()  
         -> new RecursoNaoEncontradoException("Empresa não encontrada"));
         empresaEntity.setNome(empresa.getNome());
         empresaEntity.setCnpj(empresa.getCnpj());
