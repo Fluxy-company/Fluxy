@@ -36,7 +36,7 @@ public class TokenController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Operation(summary = "Login", description = "Método que realiza o login dos usuarios")
+    @Operation(summary = "Login", description = "Método que realiza o login dos usuarios", security = {})
     @ApiResponse(responseCode = "200", description = "Login realizado com sucesso")
     @ApiResponse(responseCode = "403", description = "Sem permissão, login incorreto")
     @ApiResponse(responseCode = "500", description = "Erro de servidor / senha invalida")

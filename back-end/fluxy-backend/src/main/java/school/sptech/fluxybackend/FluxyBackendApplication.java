@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @OpenAPIDefinition(
         info = @Info(
-                title = "API Fluxy",
+                title = "FLUXY APPLICATION",
                 version = "1.0",
                 description = "Esta documentação é para centralização dos recursos da api da empresa Fluxy",
                 summary = "Desenvolvedores pelos funcionarios da fluxy"

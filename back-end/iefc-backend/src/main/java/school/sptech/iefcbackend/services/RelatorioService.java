@@ -18,6 +18,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.apache.pdfbox.pdmodel.graphics.PDXObject;
@@ -25,6 +26,7 @@ import school.sptech.iefcbackend.dto.relatorio.RelatorioRequestDTO;
 import school.sptech.iefcbackend.dto.relatorio.MembroEquipeDTO;
 import school.sptech.iefcbackend.dto.relatorio.EventoRelatorioDTO;
 import school.sptech.iefcbackend.dto.relatorio.DepoimentoDTO;
+import school.sptech.iefcbackend.events.RelatorioGeradoEvent;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -39,6 +41,12 @@ import javax.imageio.ImageIO;
 
 @Service
 public class RelatorioService {
+
+    private final ApplicationEventPublisher eventPublisher;
+
+    public RelatorioService(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     private static final Logger log = LoggerFactory.getLogger(RelatorioService.class);
 
@@ -417,7 +425,12 @@ public class RelatorioService {
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             doc.save(baos);
-            return baos.toByteArray();
+            byte[] pdfBytes = baos.toByteArray();
+
+            String anoRelatorio = (dto.getAno() != null ? dto.getAno() : "2026");
+            eventPublisher.publishEvent(new RelatorioGeradoEvent(this, anoRelatorio, pdfBytes.length));
+
+            return pdfBytes;
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao processar PDF: " + e.getMessage(), e);

@@ -61,7 +61,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    @Operation(summary = "Salva os dados do usuario", description = "Método que salva os dados do usuario")
+    @Operation(summary = "Salva os dados do usuario", description = "Método que salva os dados do usuario", security = {})
     @ApiResponse(responseCode = "201",
             content = @Content(schema = @Schema(implementation = UsuarioResponseDTO.class)),
             description = "Usuario criado com sucesso")

@@ -5,7 +5,6 @@ import { isAdmin } from "../../services/api";
 const NAV_LINKS = [
   { label: "Cursos", href: "/cursos" },
   { label: "Meus Cursos", href: "/meus-cursos" },
-  { label: "Calendário", href: "/calendario" },
   { label: "Relatorio", href: "/relatorio" }
 ];
 
@@ -13,6 +12,8 @@ export default function DashboardNavbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const admin = isAdmin();
+  const visibleNavLinks = NAV_LINKS.filter((link) => admin || link.href !== "/relatorio");
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -29,7 +30,7 @@ export default function DashboardNavbar() {
       </div>
 
       <div className="hidden md:flex items-center gap-6">
-        {NAV_LINKS.map((link) => {
+        {visibleNavLinks.map((link) => {
           const isActive = location.pathname === link.href;
           return (
             <a
@@ -82,7 +83,7 @@ export default function DashboardNavbar() {
           </svg>
         </button>
 
-        {isAdmin() && (
+        {admin && (
           <a
             href="/admin"
             className={`text-sm font-medium transition-colors ${
