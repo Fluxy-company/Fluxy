@@ -33,7 +33,7 @@ export default function CaseSection({
 
             <div className="flex gap-10 mt-6">
               {links.map((link, index) => (
-                <a
+                <a target="_blank"
                   key={index}
                   href={link.href}
                   className="flex items-center underline underline-offset-4 text-xl"

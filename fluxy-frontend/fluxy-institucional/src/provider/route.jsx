@@ -2,7 +2,8 @@ import {createBrowserRouter} from "react-router-dom"
 import Institucional from "../pages/Institucional"
 import Login from "../pages/Login"
 import Cadastro from "../pages/Cadastro"
-import ListaUsuarios from "../../../src/pages/listagemUsuarios"
+import ListaUsuarios from "../pages/ListaUsuarios"
+import ListaEmpresas from "../pages/ListaEmpresas"
 
 export const routes = createBrowserRouter ([
     {path: "/",
@@ -17,13 +18,13 @@ export const routes = createBrowserRouter ([
     element: <Cadastro />
   },
   {
-    path:'/listagem',
+    path:'/usuarios',
     element: <ListaUsuarios />
-  }
+  },
+    {
+      path: '/empresas',
+      element: <ListaEmpresas />
+    }
 
 
 ])
-
-{/* <Route path='/login' element={<Login></Login>}></Route>
-<Route path='/cadastro' element={<Cadastro></Cadastro>}></Route>
-<Route path='/listagem' element={<Listagem></Listagem>}></Route> */}

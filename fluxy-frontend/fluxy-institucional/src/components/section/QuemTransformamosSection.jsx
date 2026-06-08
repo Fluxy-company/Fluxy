@@ -1,5 +1,5 @@
 import CaseSection from "./CaseSection";
-import iefcLogo from "../../assets/iefc-logo.png"
+import iefcLogo from "../../assets/logotipo-azul.svg"
 import Layout from "../layout/Layout";
 import siteIcone from "../../assets/site.svg";
 import instagramIcone from "../../assets/instagram.svg";
