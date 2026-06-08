@@ -30,7 +30,7 @@ export function getUserRoles() {
   if (!token) return [];
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.escopo ? payload.escopo.split(" ") : [];
+    return payload.scope ? payload.scope.split(" ") : [];
   } catch {
     return [];
   }

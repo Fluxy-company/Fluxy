@@ -17,7 +17,7 @@ public class Empresa {
     @Column(name = "empresa_id")
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String nome;
 
     @Column(nullable = false, unique = true)
@@ -27,7 +27,7 @@ public class Empresa {
     private String telefone;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
 

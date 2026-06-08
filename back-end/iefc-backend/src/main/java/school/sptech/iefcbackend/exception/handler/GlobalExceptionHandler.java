@@ -3,6 +3,7 @@ package school.sptech.iefcbackend.exception.handler;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -157,6 +158,18 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleAccessDenied(
+            AccessDeniedException ex,
+            WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                new Date(),
+                "Acesso Negado",
+                "Você não tem permissão para acessar este recurso."
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(Exception.class)

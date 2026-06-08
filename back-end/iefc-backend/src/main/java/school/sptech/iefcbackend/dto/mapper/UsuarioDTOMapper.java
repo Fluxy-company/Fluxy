@@ -20,7 +20,6 @@ public class UsuarioDTOMapper {
 
     public Usuario toEntity(UsuarioRequestDTO dto){
         Usuario usuario = new Usuario();
-                usuario.setId(dto.getIdUsuario());
                 usuario.setNome(dto.getNome());
                 usuario.setSobrenome(dto.getSobrenome());
                 usuario.setEmail(dto.getEmail());
