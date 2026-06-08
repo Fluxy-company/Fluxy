@@ -9,29 +9,26 @@ import java.util.List;
 public class RelatorioRequestDTO {
 
     private String ano;
-
-    private String introducao;
-    private String missao;
-    private String proposito;
     private String depoimentoDiretoraPresidente;
     private String depoimentoDiretoraOperacional;
     private MultipartFile fotoDiretoraPres;
     private MultipartFile fotoDiretoraOp;
-
+    private String estruturaOrganizacional;
+    private String introducaoSobreIefc;
+    private String pilarEducacao;
     private List<MembroEquipeDTO> equipe;
-
-    private String introAtividades;
     private List<EventoRelatorioDTO> eventos;
-
-    private Integer totalEventos;
-    private Integer participantesDirectos;
+    private String textoLumina;
+    private String textoPilarPesquisa;
+    private String textoPesquisaBloco2;
+    private String totalEventos;
+    private String participantesDiretos;
     private String beneficiariosIndiretos;
     private List<DepoimentoDTO> depoimentos;
-
+    private String textoPresencaDigital;
     private String textoParceiras;
-    private List<String> empresasParceiras;
-
-    private String textoTransparencia;
-
-    private String consideracoesFinais;
+    private String transparenciaBloco1;
+    private String transparenciaBloco2;
+    private String consideracoesBloco1;
+    private String consideracoesBloco2;
 }

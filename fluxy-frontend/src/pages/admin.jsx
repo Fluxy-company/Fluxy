@@ -137,23 +137,30 @@ export default function Admin() {
       <div className="flex gap-1 mb-8 border-b border-gray-200">
         <button
           onClick={() => setActiveTab("cursos")}
-          className={`px-6 py-3 !text-sm font-semibold transition-colors cursor-pointer ${
-            activeTab === "cursos"
-              ? "!bg-[#1e2d3d] text-white"
-              : "!bg-transparent text-gray-500 hover:text-gray-700"
-          }`}
+          className={`px-6 py-3 !text-sm font-semibold transition-colors cursor-pointer ${activeTab === "cursos"
+            ? "!bg-[#1e2d3d] text-white"
+            : "!bg-transparent text-gray-500 hover:text-gray-700"
+            }`}
         >
           Cursos
         </button>
         <button
           onClick={() => setActiveTab("temas")}
-          className={`px-6 py-3 !text-sm font-semibold transition-colors cursor-pointer ${
-            activeTab === "temas"
-              ? "!bg-[#1e2d3d] text-white"
-              : "!bg-transparent text-gray-500 hover:text-gray-700"
-          }`}
+          className={`px-6 py-3 !text-sm font-semibold transition-colors cursor-pointer ${activeTab === "temas"
+            ? "!bg-[#1e2d3d] text-white"
+            : "!bg-transparent text-gray-500 hover:text-gray-700"
+            }`}
         >
           Temas
+        </button>
+        <button
+          onClick={() => setActiveTab("relatorio")}
+          className={`px-6 py-3 !text-sm font-semibold transition-colors cursor-pointer ${activeTab === "relatorio"
+              ? "!bg-[#1e2d3d] text-white"
+              : "!bg-transparent text-gray-500 hover:text-gray-700"
+            }`}
+        >
+          Relatório PDF
         </button>
       </div>
 
@@ -162,11 +169,10 @@ export default function Admin() {
         <>
           {mensagem && (
             <div
-              className={`mb-6 p-4 border ${
-                mensagem.tipo === "sucesso"
-                  ? "bg-green-50 border-green-200 text-green-800"
-                  : "bg-red-50 border-red-200 text-red-800"
-              }`}
+              className={`mb-6 p-4 border ${mensagem.tipo === "sucesso"
+                ? "bg-green-50 border-green-200 text-green-800"
+                : "bg-red-50 border-red-200 text-red-800"
+                }`}
             >
               {mensagem.texto}
             </div>
@@ -288,11 +294,10 @@ export default function Admin() {
         <>
           {temaMensagem && (
             <div
-              className={`mb-6 p-4 border ${
-                temaMensagem.tipo === "sucesso"
-                  ? "bg-green-50 border-green-200 text-green-800"
-                  : "bg-red-50 border-red-200 text-red-800"
-              }`}
+              className={`mb-6 p-4 border ${temaMensagem.tipo === "sucesso"
+                ? "bg-green-50 border-green-200 text-green-800"
+                : "bg-red-50 border-red-200 text-red-800"
+                }`}
             >
               {temaMensagem.texto}
             </div>
@@ -367,6 +372,21 @@ export default function Admin() {
             )}
           </div>
         </>
+      )}
+
+      {/* ===== RELATÓRIO TAB ===== */}
+      {activeTab === "relatorio" && (
+        <div className="text-center py-12">
+          <p className="text-gray-600 mb-4">
+            Acesse a página dedicada para gerar o Relatório de Atividades IEFC.
+          </p>
+          <a
+            href="/relatorio"
+            className="inline-block !bg-[#0e3f5c] text-white px-8 py-3 text-sm font-semibold hover:!bg-[#1b5e80]"
+          >
+            Abrir Gerador de Relatório
+          </a>
+        </div>
       )}
     </DashboardLayout>
   );

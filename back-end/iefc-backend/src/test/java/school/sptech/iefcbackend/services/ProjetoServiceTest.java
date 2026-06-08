@@ -35,7 +35,7 @@ class ProjetoServiceTest {
     void setUp() {
         projeto = new Projeto();
         projeto.setId(1L);
-        projeto.setNome("Sistema de Vendas");
+        projeto.setNome("Projeto de Ciencia");
         projeto.setDescricao("Sistema completo de vendas");
         projeto.setDataInicio(LocalDate.of(2024, 1, 10));
         projeto.setDataFim(LocalDate.of(2024, 12, 31));
@@ -50,7 +50,7 @@ class ProjetoServiceTest {
         List<Projeto> resultado = service.buscarTodos();
 
         assertEquals(1, resultado.size());
-        assertEquals("Sistema de Vendas", resultado.get(0).getNome());
+        assertEquals("Projeto de Ciencia", resultado.get(0).getNome());
         verify(projetoRepository, times(1)).findAll();
     }
 
@@ -68,13 +68,13 @@ class ProjetoServiceTest {
     @Test
     @DisplayName("buscarProjetoPorNome deve retornar projeto quando nome existe")
     void buscarProjetoPorNomeDeveRetornar() {
-        when(projetoRepository.findByNome("Sistema de Vendas")).thenReturn(Optional.of(projeto));
+        when(projetoRepository.findByNome("Projeto de Ciencia")).thenReturn(Optional.of(projeto));
 
-        Projeto resultado = service.buscarProjetoPorNome("Sistema de Vendas");
+        Projeto resultado = service.buscarProjetoPorNome("Projeto de Ciencia");
 
         assertNotNull(resultado);
-        assertEquals("Sistema de Vendas", resultado.getNome());
-        verify(projetoRepository, times(1)).findByNome("Sistema de Vendas");
+        assertEquals("Projeto de Ciencia", resultado.getNome());
+        verify(projetoRepository, times(1)).findByNome("Projeto de Ciencia");
     }
 
     @Test
@@ -143,7 +143,7 @@ class ProjetoServiceTest {
     @DisplayName("atualizarPorId deve atualizar os dados do projeto")
     void atualizarPorIdDeveAtualizar() {
         Projeto projetoAtualizado = new Projeto();
-        projetoAtualizado.setNome("Sistema de Vendas v2");
+        projetoAtualizado.setNome("Projeto de Ciencia v2");
         projetoAtualizado.setDescricao("Nova versão");
         projetoAtualizado.setDataInicio(LocalDate.of(2024, 2, 1));
         projetoAtualizado.setDataFim(LocalDate.of(2024, 12, 31));

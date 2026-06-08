@@ -1,5 +1,6 @@
 package school.sptech.iefcbackend.dto.relatorio;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,4 +16,6 @@ public class EventoRelatorioDTO {
     private String ministrante;
     private String descricao;
     private MultipartFile foto;
+    @JsonIgnore
+    private String fotoBase64;
 }

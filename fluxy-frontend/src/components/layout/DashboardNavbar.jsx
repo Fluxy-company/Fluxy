@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, href } from "react-router-dom";
 import { isAdmin } from "../../services/api";
 
 const NAV_LINKS = [
   { label: "Cursos", href: "/cursos" },
   { label: "Meus Cursos", href: "/meus-cursos" },
   { label: "Calendário", href: "/calendario" },
+  { label: "Relatorio", href: "/relatorio" }
 ];
 
 export default function DashboardNavbar() {
