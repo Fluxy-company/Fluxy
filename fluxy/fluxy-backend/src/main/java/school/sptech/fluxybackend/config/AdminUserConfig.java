@@ -1,0 +1,48 @@
+package school.sptech.fluxybackend.config;
+
+import lombok.*;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import school.sptech.fluxybackend.models.Role;
+import school.sptech.fluxybackend.models.Usuario;
+import school.sptech.fluxybackend.repository.RoleRepository;
+import school.sptech.fluxybackend.repository.UsuarioRepository;
+
+import java.util.Set;
+
+@Configuration
+public class AdminUserConfig implements CommandLineRunner {
+
+    private final RoleRepository roleRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public AdminUserConfig(RoleRepository roleRepository, UsuarioRepository usuarioRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.roleRepository = roleRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        var roleAdmin = roleRepository.findByNome(Role.Valores.ADMIN.name());
+
+        var usuarioAdmin = usuarioRepository.findByEmail("admin@admin.com");
+
+        usuarioAdmin.ifPresentOrElse(
+                user -> {
+                    System.out.println("adm ja existe");
+                },
+                () -> {
+                    var usuario = new Usuario();
+                    usuario.setNome("Admin");
+                    usuario.setSobrenome("Administrador");
+                    usuario.setEmail("admin@admin.com");
+                    usuario.setSenha(passwordEncoder.encode("Admin@123"));
+                    usuario.setRoles(Set.of(roleAdmin));
+                    usuarioRepository.save(usuario);
+                    System.out.println("Admin criado com sucesso");
+                });
+    }
+}

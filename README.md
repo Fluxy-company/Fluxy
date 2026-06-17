@@ -1,107 +1,148 @@
-# Fluxy
+# IEFC × Fluxy
 
 Repositório grupo 7 - Fluxy
 
-## Pré-requisitos
+Repositório com dois sistemas full-stack desenvolvidos para a Fluxy e a IEFC.
 
-- [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/) instalados
+---
 
-## Como rodar a aplicação
+## Sobre o Projeto
 
-### 1. Configurar variáveis de ambiente
+### IEFC — Instituto Educacional Fabiana Costa
+Plataforma de ensino que conecta estudantes a cursos, eventos e projetos da instituição. Conta com área pública institucional, dashboard do aluno, player de vídeo-aulas, controle de progresso e geração de relatórios anuais em PDF para a gestão.
 
-Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+### Fluxy
+Sistema de gestão interna para controle de projetos, empresas parceiras e usuários vinculados à instituição.
 
-```env
-DATABASE_NAME=iefc_db
-DATABASE_USERNAME=seu_usuario
-DATABASE_PASSWORD=sua_senha
+---
 
-MAILTRAP_USERNAME=seu_mailtrap_username
-MAILTRAP_PASSWORD=seu_mailtrap_password
-RELATORIO_EMAIL_DESTINATARIO=email@destino.com
+## Tecnologias
+
+| Camada | IEFC | Fluxy |
+|---|---|---|
+| Backend | Java 21 · Spring Boot 4 · Spring Security (JWT RSA) · JPA/Hibernate · PDFBox · Mailtrap | Java 21 · Spring Boot · Spring Security (JWT RSA) · JPA/Hibernate |
+| Banco | PostgreSQL 16 | PostgreSQL 16 |
+| Frontend | React 19 · Vite 8 · Tailwind CSS 4 · React Router 7 | React · Vite · Tailwind CSS |
+| Container | Docker · Docker Compose | Docker · Docker Compose |
+
+---
+
+## Estrutura do Repositório
+
+```
+.
+├── docker-compose.yml          ← orquestrador de todos os serviços
+├── .env.example                ← template de variáveis de ambiente
+├── .env                        ← NÃO commitado (você cria a partir do .env.example)
+│
+├── iefc/
+│   ├── front/                  ← Frontend IEFC (React/Vite)
+│   └── iefc-backend/           ← Backend IEFC (Spring Boot)
+│       └── src/main/resources/
+│           ├── app.key         ← chave privada RSA (não commitada)
+│           └── app.pub         ← chave pública RSA (não commitada)
+│
+└── fluxy/
+    ├── front/                  ← Frontend Fluxy (React/Vite)
+    └── fluxy-backend/          ← Backend Fluxy (Spring Boot)
+        └── src/main/resources/
+            ├── app.key         ← chave privada RSA (não commitada)
+            └── app.pub         ← chave pública RSA (não commitada)
+```
+---
+
+## Como Rodar
+
+### 1. Verificar as chaves RSA
+
+Cada backend precisa de um par de chaves RSA para assinar e validar os tokens JWT. Verifique se os arquivos existem antes de subir os containers:
+
+```bash
+# IEFC
+ls iefc/iefc-backend/src/main/resources/app.key
+ls iefc/iefc-backend/src/main/resources/app.pub
+
+# Fluxy
+ls fluxy/fluxy-backend/src/main/resources/app.key
+ls fluxy/fluxy-backend/src/main/resources/app.pub
 ```
 
-> As credenciais do Mailtrap podem ser obtidas em [mailtrap.io](https://mailtrap.io) (SMTP Settings → Integrations → Java).
+Se algum arquivo estiver faltando, gere o par com `openssl`
+---
 
-### 2. Subir os containers
+### 2. Criar o arquivo `.env`
+
+Copie o template e preencha as variáveis:
+
+```bash
+cp .env.example .env
+```
+
+Abra o `.env` e preencha os valores marcados com `# PREENCHER`:
+
+```env
+# Mailtrap — necessário para envio de e-mail ao gerar relatório IEFC
+MAILTRAP_USERNAME=   # PREENCHER com seu usuário do Mailtrap
+MAILTRAP_PASSWORD=   # PREENCHER com sua senha do Mailtrap
+```
+
+Os demais valores já vêm com padrões prontos para desenvolvimento local.
+
+---
+
+### 3. Subir todos os serviços
+
+```bash
+docker compose up --build
+```
+
+Na primeira execução o build pode levar alguns minutos (download das imagens base e compilação dos backends).
+
+Para rodar em segundo plano:
 
 ```bash
 docker compose up --build -d
 ```
 
-O Docker irá:
-1. Criar o banco de dados PostgreSQL
-2. Compilar e iniciar o backend Spring Boot (aguarda o banco ficar saudável)
-3. Iniciar os dois frontends (aguardam o backend ficar saudável)
-
-> A primeira execução pode levar alguns minutos para baixar as dependências Maven. As execuções seguintes serão mais rápidas graças ao cache.
-
-### 3. Acessar a aplicação
-
-| Serviço | URL |
-|---|---|
-| Backend (API) | http://localhost:8080 |
-| Swagger UI | http://localhost:8080/swagger-ui.html |
-| Frontend Fluxy (Dashboard) | http://localhost:5173 |
-| Frontend IEFC (Institucional) | http://localhost:5174 |
-
-### 4. Credenciais padrão
-
-A aplicação cria automaticamente dois usuários ao iniciar:
-
-| Usuário | Email | Senha | Role |
-|---|---|---|---|
-| Admin | admin@admin.com | Admin@123 | ADMIN |
-| Usuário | user@user.com | User@123 | BASIC |
-
-### 5. Parar a aplicação
+Para parar tudo:
 
 ```bash
 docker compose down
 ```
 
-Para remover também os volumes (banco de dados e cache Maven):
+Para parar e apagar os dados dos bancos:
 
 ```bash
 docker compose down -v
 ```
 
-## Estrutura do Projeto
+---
 
-```
-├── docker-compose.yml          # Orquestração dos 4 serviços
-├── .env                        # Variáveis de ambiente
-├── back-end/iefc-backend/      # API Spring Boot (Java 21)
-├── fluxy-frontend/             # Dashboard React + Vite
-└── iefc-institucional/         # Site institucional React + Vite
-```
+## URLs de Acesso
 
-## API - Endpoints Principais
+| Serviço | URL |
+|---|---|
+| **IEFC Frontend** | http://localhost:3000 |
+| **IEFC API** | http://localhost:8080 |
+| **IEFC Swagger** | http://localhost:8080/swagger-ui/index.html |
+| **Fluxy Frontend** | http://localhost:3001 |
+| **Fluxy API** | http://localhost:8081 |
+| **Fluxy Swagger** | http://localhost:8081/swagger-ui/index.html |
 
-### Autenticação
-- `POST /api/v1/login` — Login (retorna JWT)
-- `POST /api/v1/usuarios` — Cadastro de novo usuário
+---
 
-### Usuários (ADMIN)
-- `GET /api/v1/usuarios` — Listar todos
-- `GET /api/v1/usuarios/{id}` — Buscar por ID
-- `DELETE /api/v1/usuarios/{id}` — Deletar
+## Funcionalidades Principais
 
-### Empresas
-- `POST /api/v1/empresas` — Criar (ADMIN)
-- `GET /api/v1/empresas` — Listar (BASIC)
-- `PUT /api/v1/empresas/{id}` — Atualizar (ADMIN)
-- `DELETE /api/v1/empresas/{id}` — Deletar (ADMIN)
+### IEFC
+- Área institucional pública (home, eventos, apoiadores)
+- Cadastro e login de alunos com JWT
+- Catálogo de cursos com filtro por tema
+- Player de aulas com controle de progresso
+- Dashboard "Meus Cursos"
+- **Área Admin** — criação de cursos e temas *(requer login admin)*
+- **Geração de Relatório PDF** anual com template institucional *(requer login admin)*
+- Notificação por e-mail ao gerar relatório (Observer Pattern via Mailtrap)
 
-### Projetos (BASIC)
-- `POST /api/v1/projetos` — Criar
-- `GET /api/v1/projetos` — Listar
-- `GET /api/v1/projetos/status/{status}` — Filtrar por status
-- `PUT /api/v1/projetos/{id}` — Atualizar
-- `DELETE /api/v1/projetos/{id}` — Deletar
-
-### Relatórios
-- `POST /api/v1/relatorio/gerar` — Gerar relatório PDF
-
-> Documentação completa disponível no Swagger UI: http://localhost:8080/swagger-ui.html
+### Fluxy
+- Gestão de projetos, empresas e usuários
+- Controle de acesso por roles (Admin / Basic)
