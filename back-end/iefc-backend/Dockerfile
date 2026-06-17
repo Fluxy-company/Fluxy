@@ -1,7 +1,5 @@
 FROM maven:3.9.11-amazoncorretto-21
 
-RUN yum install -y curl && yum clean all
-
 WORKDIR /app
 
 COPY . .
