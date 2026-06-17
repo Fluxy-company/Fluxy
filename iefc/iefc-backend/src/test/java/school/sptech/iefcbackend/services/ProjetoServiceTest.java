@@ -8,10 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import school.sptech.iefcbackend.exception.RecursoNaoEncontradoException;
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
 import school.sptech.iefcbackend.models.Empresa;
-=======
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
 import school.sptech.iefcbackend.models.Projeto;
 import school.sptech.iefcbackend.repository.ProjetoRepository;
 
@@ -37,32 +34,21 @@ class ProjetoServiceTest {
 
     @BeforeEach
     void setUp() {
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
         Empresa empresa = new Empresa();
         empresa.setId(1L);
 
         projeto = new Projeto();
         projeto.setId(1L);
         projeto.setNome("Sistema de Vendas");
-=======
-        projeto = new Projeto();
-        projeto.setId(1L);
-        projeto.setNome("Projeto de Ciencia");
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
         projeto.setDescricao("Sistema completo de vendas");
         projeto.setDataInicio(LocalDate.of(2024, 1, 10));
         projeto.setDataFim(LocalDate.of(2024, 12, 31));
         projeto.setStatus(Projeto.StatusProjeto.EM_ANDAMENTO);
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
         projeto.setEmpresa(empresa);
     }
 
     // --- buscarTodos ---
 
-=======
-    }
-
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     @Test
     @DisplayName("buscarTodos deve retornar todos os projetos")
     void buscarTodosDeveRetornarTodos() {
@@ -71,11 +57,7 @@ class ProjetoServiceTest {
         List<Projeto> resultado = service.buscarTodos();
 
         assertEquals(1, resultado.size());
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
         assertEquals("Sistema de Vendas", resultado.get(0).getNome());
-=======
-        assertEquals("Projeto de Ciencia", resultado.get(0).getNome());
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
         verify(projetoRepository, times(1)).findAll();
     }
 
@@ -90,7 +72,6 @@ class ProjetoServiceTest {
         verify(projetoRepository, times(1)).findAll();
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     // --- salvarProjeto ---
 
     @Test
@@ -117,18 +98,6 @@ class ProjetoServiceTest {
         assertNotNull(resultado);
         assertEquals("Sistema de Vendas", resultado.getNome());
         verify(projetoRepository, times(1)).findByNome("Sistema de Vendas");
-=======
-    @Test
-    @DisplayName("buscarProjetoPorNome deve retornar projeto quando nome existe")
-    void buscarProjetoPorNomeDeveRetornar() {
-        when(projetoRepository.findByNome("Projeto de Ciencia")).thenReturn(Optional.of(projeto));
-
-        Projeto resultado = service.buscarProjetoPorNome("Projeto de Ciencia");
-
-        assertNotNull(resultado);
-        assertEquals("Projeto de Ciencia", resultado.getNome());
-        verify(projetoRepository, times(1)).findByNome("Projeto de Ciencia");
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     }
 
     @Test
@@ -141,11 +110,8 @@ class ProjetoServiceTest {
         verify(projetoRepository, times(1)).findByNome("Inexistente");
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     // --- buscarProjetoPorDataInicio ---
 
-=======
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     @Test
     @DisplayName("buscarProjetoPorDataInicio deve retornar lista de projetos")
     void buscarProjetoPorDataInicioDeveRetornar() {
@@ -168,11 +134,8 @@ class ProjetoServiceTest {
                 () -> service.buscarProjetoPorDataInicio(data));
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     // --- buscarProjetoPorStatus ---
 
-=======
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     @Test
     @DisplayName("buscarProjetoPorStatus deve retornar projetos com o status informado")
     void buscarProjetoPorStatusDeveRetornar() {
@@ -203,20 +166,13 @@ class ProjetoServiceTest {
                 () -> service.buscarProjetoPorStatus("CANCELADO"));
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     // --- atualizarPorId ---
 
-=======
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     @Test
     @DisplayName("atualizarPorId deve atualizar os dados do projeto")
     void atualizarPorIdDeveAtualizar() {
         Projeto projetoAtualizado = new Projeto();
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
         projetoAtualizado.setNome("Sistema de Vendas v2");
-=======
-        projetoAtualizado.setNome("Projeto de Ciencia v2");
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
         projetoAtualizado.setDescricao("Nova versão");
         projetoAtualizado.setDataInicio(LocalDate.of(2024, 2, 1));
         projetoAtualizado.setDataFim(LocalDate.of(2024, 12, 31));
@@ -244,11 +200,8 @@ class ProjetoServiceTest {
                 () -> service.atualizarPorId(99L, projetoAtualizado));
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     // --- deletarPorId ---
 
-=======
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/ProjetoServiceTest.java
     @Test
     @DisplayName("deletarPorId deve remover o projeto existente")
     void deletarPorIdDeveRemover() {

@@ -42,10 +42,6 @@ class EmpresaServiceTest {
         usuario.setId(1L);
         usuario.setNome("João");
         usuario.setEmail("joao@email.com");
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
-=======
-        usuario.setSenha("senha123");
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
 
         empresa = new Empresa();
         empresa.setId(1L);
@@ -55,11 +51,8 @@ class EmpresaServiceTest {
         empresa.setUsuario(usuario);
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     // --- buscarTodos ---
 
-=======
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     @Test
     @DisplayName("buscarTodos deve retornar lista com empresas")
     void buscarTodosDeveRetornarLista() {
@@ -83,11 +76,8 @@ class EmpresaServiceTest {
         verify(empresaRepository, times(1)).findAll();
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     // --- buscarEmpresaPorCnpj ---
 
-=======
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     @Test
     @DisplayName("buscarEmpresaPorCnpj deve retornar empresa quando CNPJ existe")
     void buscarEmpresaPorCnpjDeveRetornarEmpresa() {
@@ -110,7 +100,6 @@ class EmpresaServiceTest {
         verify(empresaRepository, times(1)).findByCnpj("00.000.000/0000-00");
     }
 
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     // --- salvarEmpresa ---
 
     @Test
@@ -143,66 +132,6 @@ class EmpresaServiceTest {
     @Test
     @DisplayName("atualizarPorId deve atualizar os dados da empresa")
     void atualizarPorIdDeveAtualizar() {
-=======
-    @Test
-    @DisplayName("salvarEmpresa deve salvar com usuário válido")
-    void salvarEmpresaDeveSalvarComUsuarioValido() {
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
-
-        assertDoesNotThrow(() -> service.salvarEmpresa(empresa));
-
-        verify(usuarioRepository, times(1)).findById(1L);
-        verify(empresaRepository, times(1)).save(empresa);
-    }
-
-    @Test
-    @DisplayName("salvarEmpresa deve salvar sem usuario quando usuario é nulo")
-    void salvarEmpresaDeveSalvarSemUsuario() {
-        empresa.setUsuario(null);
-
-        assertDoesNotThrow(() -> service.salvarEmpresa(empresa));
-
-        verify(usuarioRepository, never()).findById(any());
-        verify(empresaRepository, times(1)).save(empresa);
-    }
-
-    @Test
-    @DisplayName("salvarEmpresa deve salvar sem usuario quando id do usuario é nulo")
-    void salvarEmpresaDeveSalvarQuandoIdUsuarioNulo() {
-        Usuario usuarioSemId = new Usuario();
-        // id permanece null
-        empresa.setUsuario(usuarioSemId);
-
-        assertDoesNotThrow(() -> service.salvarEmpresa(empresa));
-
-        verify(usuarioRepository, never()).findById(any());
-        verify(empresaRepository, times(1)).save(empresa);
-    }
-
-    @Test
-    @DisplayName("salvarEmpresa deve lançar exceção quando usuario vinculado não existe no banco")
-    void salvarEmpresaDeveLancarExcecaoUsuarioNaoEncontrado() {
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(RecursoNaoEncontradoException.class, () -> service.salvarEmpresa(empresa));
-        verify(empresaRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("salvarEmpresa deve lançar exceção quando id do usuario é inválido (zero ou negativo)")
-    void salvarEmpresaDeveLancarExcecaoIdUsuarioInvalido() {
-        Usuario usuarioInvalido = new Usuario();
-        usuarioInvalido.setId(0L);
-        empresa.setUsuario(usuarioInvalido);
-
-        assertThrows(RecursoNaoEncontradoException.class, () -> service.salvarEmpresa(empresa));
-        verify(empresaRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("atualizarPorId deve atualizar os dados da empresa sem usuario")
-    void atualizarPorIdDeveAtualizarSemUsuario() {
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
         Empresa empresaAtualizada = new Empresa();
         empresaAtualizada.setNome("Tech S/A");
         empresaAtualizada.setCnpj("99.999.999/0001-00");
@@ -210,7 +139,6 @@ class EmpresaServiceTest {
         empresaAtualizada.setUsuario(null);
 
         when(empresaRepository.findById(1L)).thenReturn(Optional.of(empresa));
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
         when(empresaRepository.save(any(Empresa.class))).thenReturn(empresa);
 
         Empresa resultado = service.atualizarPorId(1L, empresaAtualizada);
@@ -218,39 +146,11 @@ class EmpresaServiceTest {
         assertNotNull(resultado);
         verify(empresaRepository, times(1)).findById(1L);
         verify(empresaRepository, times(1)).save(any(Empresa.class));
-=======
-
-        assertDoesNotThrow(() -> service.atualizarPorId(1L, empresaAtualizada));
-
-        verify(empresaRepository, times(1)).findById(1L);
-        verify(empresaRepository, times(1)).save(empresa);
-    }
-
-    @Test
-    @DisplayName("atualizarPorId deve atualizar os dados da empresa com usuario válido")
-    void atualizarPorIdDeveAtualizarComUsuarioValido() {
-        Empresa empresaAtualizada = new Empresa();
-        empresaAtualizada.setNome("Tech S/A");
-        empresaAtualizada.setCnpj("99.999.999/0001-00");
-        empresaAtualizada.setTelefone("11888888888");
-        empresaAtualizada.setUsuario(usuario);
-
-        when(empresaRepository.findById(1L)).thenReturn(Optional.of(empresa));
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
-
-        assertDoesNotThrow(() -> service.atualizarPorId(1L, empresaAtualizada));
-
-        verify(empresaRepository, times(1)).save(empresa);
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     }
 
     @Test
     @DisplayName("atualizarPorId deve lançar exceção quando empresa não existe")
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     void atualizarPorIdDeveLancarExcecao() {
-=======
-    void atualizarPorIdDeveLancarExcecaoEmpresaNaoEncontrada() {
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
         when(empresaRepository.findById(99L)).thenReturn(Optional.empty());
 
         Empresa empresaAtualizada = new Empresa();
@@ -259,31 +159,9 @@ class EmpresaServiceTest {
 
         assertThrows(RecursoNaoEncontradoException.class,
                 () -> service.atualizarPorId(99L, empresaAtualizada));
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     }
 
     // --- deletarPorId ---
-=======
-        verify(empresaRepository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("atualizarPorId deve lançar exceção quando usuario vinculado não existe")
-    void atualizarPorIdDeveLancarExcecaoUsuarioNaoEncontrado() {
-        Empresa empresaAtualizada = new Empresa();
-        empresaAtualizada.setNome("Tech S/A");
-        empresaAtualizada.setCnpj("99.999.999/0001-00");
-        empresaAtualizada.setTelefone("11888888888");
-        empresaAtualizada.setUsuario(usuario);
-
-        when(empresaRepository.findById(1L)).thenReturn(Optional.of(empresa));
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(RecursoNaoEncontradoException.class,
-                () -> service.atualizarPorId(1L, empresaAtualizada));
-        verify(empresaRepository, never()).save(any());
-    }
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
 
     @Test
     @DisplayName("deletarPorId deve remover a empresa existente")
@@ -302,11 +180,5 @@ class EmpresaServiceTest {
 
         assertThrows(RecursoNaoEncontradoException.class,
                 () -> service.deletarPorId(99L));
-<<<<<<< HEAD:back-end/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
     }
 }
-=======
-        verify(empresaRepository, never()).delete(any());
-    }
-}
->>>>>>> release:iefc/iefc-backend/src/test/java/school/sptech/iefcbackend/services/EmpresaServiceTest.java
