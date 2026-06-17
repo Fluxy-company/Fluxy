@@ -16,7 +16,10 @@ function ListaUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    fetch("/api/v1/usuarios")
+    const token = localStorage.getItem("token");
+    fetch("/api/v1/usuarios", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then((res) => res.json())
       .then((data) => setUsuarios(data))
       .catch((err) => console.log(err));
