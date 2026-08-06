@@ -40,7 +40,7 @@ class EmpresaServiceTest {
     void setUp() {
         usuario = new Usuario();
         usuario.setId(1L);
-        usuario.setNome("João");
+        usuario.setNome("João gomes");
         usuario.setEmail("joao@email.com");
         usuario.setSenha("senha123");
 

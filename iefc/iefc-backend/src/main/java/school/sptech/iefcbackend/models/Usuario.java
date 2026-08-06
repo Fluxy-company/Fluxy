@@ -24,11 +24,8 @@ public class Usuario {
     @Column(name = "usuario_id")
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 250, nullable = false)
     private String nome;
-
-    @Column(length = 50)
-    private String sobrenome;
 
     @Column(length = 100, nullable = false, unique = true)
     private String email;

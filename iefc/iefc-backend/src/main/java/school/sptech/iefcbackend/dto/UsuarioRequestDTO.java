@@ -10,10 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioRequestDTO {
-        @NotBlank(message = "Nome é obrigatório")
+        @NotBlank(message = "Nome completo é obrigatório")
         private String nome;
-        @NotBlank(message = "Sobrenome é obrigatório")
-        private String sobrenome;
         @Email(message = "Email deve ser válido")
         @NotBlank(message = "Email é obrigatório")
         private String email;

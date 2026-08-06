@@ -69,7 +69,6 @@ public class UsuarioService {
        }
        
        entity.setNome(dto.getNome());
-       entity.setSobrenome(dto.getSobrenome());
        entity.setEmail(dto.getEmail());
        // Atualizar senha se fornecida
        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {

@@ -23,8 +23,7 @@ public class AdminUserConfig implements CommandLineRunner {
                 user -> System.out.println("Admin já existe, pulando criação."),
                 () -> {
                     var admin = new Usuario();
-                    admin.setNome("Admin");
-                    admin.setSobrenome("Administrador");
+                    admin.setNome("Admin da silva");
                     admin.setEmail("admin@admin.com");
                     admin.setSenha(passwordEncoder.encode("Admin@123"));
                     admin.setRoles(Set.of(Role.ADMIN));
@@ -37,8 +36,7 @@ public class AdminUserConfig implements CommandLineRunner {
                 user -> System.out.println("User já existe, pulando criação."),
                 () -> {
                     var basicUser = new Usuario();
-                    basicUser.setNome("User");
-                    basicUser.setSobrenome("Padrão");
+                    basicUser.setNome("User Padrão");
                     basicUser.setEmail("user@user.com");
                     basicUser.setSenha(passwordEncoder.encode("User@123"));
                     basicUser.setRoles(Set.of(Role.BASIC));
