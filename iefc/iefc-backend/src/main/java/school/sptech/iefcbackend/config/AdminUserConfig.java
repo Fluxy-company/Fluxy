@@ -1,6 +1,7 @@
 package school.sptech.iefcbackend.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,15 +18,25 @@ public class AdminUserConfig implements CommandLineRunner {
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Value("${app.admin.email}")
+    private String adminEmail;
+
+    @Value("${app.admin.senha}")
+    private String adminSenha;
+
     @Override
     public void run(String... args) {
-        usuarioRepository.findByEmail("admin@admin.com").ifPresentOrElse(
+        if (adminSenha == null || adminSenha.isBlank()) {
+            throw new IllegalStateException(
+                    "Usuario admin não configurado");
+        }
+        usuarioRepository.findByEmail(adminEmail).ifPresentOrElse(
                 user -> System.out.println("Admin já existe, pulando criação."),
                 () -> {
                     var admin = new Usuario();
                     admin.setNome("Admin da silva");
-                    admin.setEmail("admin@admin.com");
-                    admin.setSenha(passwordEncoder.encode("Admin@123"));
+                    admin.setEmail(adminEmail);
+                    admin.setSenha(passwordEncoder.encode(adminSenha));
                     admin.setRoles(Set.of(Role.ADMIN));
                     usuarioRepository.save(admin);
                     System.out.println("Admin criado com sucesso.");

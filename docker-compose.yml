@@ -39,6 +39,29 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7.4-alpine
+    container_name: redis-rate-limit
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+
+    volumes:
+      - redis-data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   iefc-api:
     container_name: iefc_backend
     build:
@@ -125,6 +148,7 @@ volumes:
   fluxy-db-data:
   iefc-maven-cache:  
   fluxy-maven-cache:
+  redis-data:
 
 networks:
   app-network:

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import school.sptech.iefcbackend.models.Curso;
 import school.sptech.iefcbackend.models.Inscricao;
@@ -29,8 +30,7 @@ public class InscricaoController {
         this.progressoService = progressoService;
     }
 
-    // ---- Inscrições ----
-
+    @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_BASIC', 'SCOPE_ROLE_ADMIN')")
     @PostMapping("/usuario/{usuarioId}/curso/{cursoId}")
     @Operation(summary = "Inscrever usuário em um curso", description = "Cria a inscrição do usuário no curso. Se já inscrito, retorna a inscrição existente.")
     @ApiResponse(responseCode = "201", description = "Inscrição criada com sucesso")
@@ -40,6 +40,7 @@ public class InscricaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(inscricaoService.inscrever(usuarioId, cursoId));
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @GetMapping("/usuario/{usuarioId}")
     @Operation(summary = "Listar cursos do usuário", description = "Retorna todas as inscrições de um usuário")
     @ApiResponse(responseCode = "200", description = "Sucesso")
@@ -48,6 +49,7 @@ public class InscricaoController {
         return ResponseEntity.ok(inscricaoService.listarPorUsuario(usuarioId));
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @GetMapping("/usuario/{usuarioId}/curso/{cursoId}")
     @Operation(summary = "Verificar inscrição", description = "Verifica se o usuário está inscrito no curso")
     @ApiResponse(responseCode = "200", description = "Sucesso")
@@ -56,6 +58,7 @@ public class InscricaoController {
         return ResponseEntity.ok(Map.of("inscrito", inscrito));
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @DeleteMapping("/usuario/{usuarioId}/curso/{cursoId}")
     @Operation(summary = "Cancelar inscrição", description = "Remove a inscrição do usuário no curso")
     @ApiResponse(responseCode = "204", description = "Inscrição cancelada")
