@@ -1,0 +1,124 @@
+:root {
+  /* ---- Primary ---- */
+  --navy: #023C5A;
+  --navy-hover: #0D4A6E;
+  --teal-accessible: #0D7373;
+  --teal: #1C9291;
+  --amber: #F19A03;
+  --amber-light: #F2B243;
+
+  --blue-gray: #7597A0;
+  --mint: #8BCDB5;
+  --peach: #FEA35D;
+  --teal-pale: #CFE3E2;
+  --green-pale: #BFD6B8;
+  --cream: #FCF3E4;
+  
+  --ink: #1A1A1A;
+  --ink-soft: #3A4D54;
+  --ink-strong: #24343A;
+  --ink-caption: #777777;
+  --white: #FFFFFF;
+
+  --border: #EEE6D6;
+  --border-warm: #ECDFC7;
+  --border-hairline: #F2EBDA;
+  --surface-input: #FCFAF4;
+  --input-border: #D8CEBA;
+
+  --danger: #B3401F;
+
+  --on-dark: #CFE3E2;
+  --on-dark-muted: #7597A0;
+  --on-dark-accent: #F2B243;
+
+  --color-text: var(--ink);
+  --color-text-soft: var(--ink-soft);
+  --color-heading: var(--navy);
+  --color-caption: var(--ink-caption);
+
+  --color-link: var(--teal-accessible);
+  --color-link-hover: var(--navy);
+
+  --surface-page: var(--cream);
+  --surface-card: var(--white);
+  --surface-muted: var(--cream);
+  --surface-dark: var(--navy);
+  --surface-accent: var(--amber);
+
+  --border-default: var(--border);
+
+  --accent: var(--amber);
+  --accent-hover: var(--amber-light);
+}
+
+:root {
+  --font-display: 'Ubuntu', 'Segoe UI', sans-serif;
+  --font-body: 'Open Sans', -apple-system, sans-serif;
+  --font-label: 'Space Grotesk', 'Open Sans', sans-serif;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --text-hero: 60px;
+  --text-h1: 44px;
+  --text-h2: 32px;
+  --text-h3: 20px;
+  --text-lead: 19px;
+  --text-body: 15px;
+  --text-body-lg: 16px;
+  --text-small: 14px;
+  --text-caption: 12px;
+  --text-label: 11px;
+  --text-stat: 44px;
+
+  --lh-tight: 1.1;
+  --lh-heading: 1.2;
+  --lh-body: 1.6;
+  --lh-snug: 1.5;
+
+  --ls-hero: -0.01em;
+  --ls-body: 0;
+  --ls-label: 0.18em;
+  --ls-label-tight: 0.12em;
+  --ls-eyebrow: 0.28em;
+}
+
+:root {
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  --section-pad: 80px;
+  --page-margin: 80px;
+  --page-margin-mobile: 20px;
+  --content-max: 1100px;
+  --measure: 680px;
+}
+
+:root {
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-pill: 20px;
+  --radius-full: 999px;
+
+  --border-width: 1px;
+  --border-width-strong: 1.5px;
+
+  --shadow-none: none;
+  --shadow-modal: 0 30px 60px -24px rgba(2, 60, 90, 0.4);
+  --shadow-card: 0 1px 3px rgba(2, 60, 90, 0.06);
+  --shadow-lift: 0 12px 28px -16px rgba(2, 60, 90, 0.28);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 120ms;
+  --dur: 180ms;
+}
