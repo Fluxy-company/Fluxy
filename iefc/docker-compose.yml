@@ -18,27 +18,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  fluxy-db:
-    image: postgres:16-alpine
-    container_name: fluxy_db
-    environment:
-      POSTGRES_PASSWORD: ${FLUXY_DATABASE_PASSWORD}
-      POSTGRES_USER: ${FLUXY_DATABASE_USERNAME}
-      POSTGRES_DB: ${FLUXY_DATABASE_NAME}
-      PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - "5434:5432"
-    volumes:
-      - fluxy-db-data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${FLUXY_DATABASE_USERNAME} -d ${FLUXY_DATABASE_NAME}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   redis:
     image: redis:7.4-alpine
     container_name: redis-rate-limit
@@ -84,27 +63,6 @@ services:
         condition: service_healthy
     networks:
       - app-network
-
-  fluxy-api:
-    container_name: fluxy_backend
-    build:
-      context: ./fluxy/fluxy-backend
-      dockerfile: Dockerfile
-      target: dev
-    ports:
-      - "${FLUXY_APP_PORT}:8080"      
-    volumes:
-      - ./fluxy/fluxy-backend/src:/app/src
-      - ./fluxy/fluxy-backend/pom.xml:/app/pom.xml
-      - fluxy-maven-cache:/root/.m2
-    env_file:
-      - .env
-    depends_on:
-      fluxy-db:
-        condition: service_healthy
-    networks:
-      - app-network
-
   iefc-web:
     container_name: iefc_frontend
     build:
@@ -123,31 +81,9 @@ services:
       - iefc-api
     networks:
       - app-network
-
-  fluxy-web:
-    container_name: fluxy_frontend
-    build:
-      context: ./fluxy/fluxy-institucional
-      dockerfile: Dockerfile
-      target: dev
-    ports:
-      - "${FLUXY_WEB_PORT:-3001}:5173"
-    volumes:
-      - ./fluxy/fluxy-institucional/src:/app/src
-      - ./fluxy/fluxy-institucional/public:/app/public
-      - /app/node_modules
-    env_file:
-      - .env
-    depends_on:
-      - fluxy-api
-    networks:
-      - app-network
-
 volumes:
   iefc-db-data:
-  fluxy-db-data:
   iefc-maven-cache:  
-  fluxy-maven-cache:
   redis-data:
 
 networks:

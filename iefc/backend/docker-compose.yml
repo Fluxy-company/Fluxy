@@ -1,0 +1,104 @@
+services:
+  iefc-db:
+    image: postgres:16-alpine
+    container_name: iefc_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${IEFC_DATABASE_PASSWORD}
+      POSTGRES_USER: ${IEFC_DATABASE_USERNAME}
+      POSTGRES_DB: ${IEFC_DATABASE_NAME}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - iefc-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${IEFC_DATABASE_USERNAME} -d ${IEFC_DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  email-db:
+    image: postgres:16-alpine
+    container_name: email_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${EMAIL_DATABASE_PASSWORD}
+      POSTGRES_USER: ${EMAIL_DATABASE_USERNAME}
+      POSTGRES_DB: ${EMAIL_DATABASE_NAME}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - email-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${EMAIL_DATABASE_USERNAME} -d ${EMAIL_DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: redis-rate-limit
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  iefc-api:
+    container_name: iefc_backend
+    restart: unless-stopped
+    build:
+      context: ./iefc-backend
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - "${IEFC_APP_PORT:-8081}:8080"
+    env_file:
+      - .env
+    depends_on:
+      iefc-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      email-service:
+        condition: service_started
+    networks:
+      - app-network
+
+  email-service:
+    container_name: email_service
+    restart: unless-stopped
+    build:
+      context: ./email-service
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - "${EMAIL_APP_PORT:-8082}:8080"
+    env_file:
+      - .env
+    depends_on:
+      email-db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  iefc-db-data:
+  email-db-data:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge
