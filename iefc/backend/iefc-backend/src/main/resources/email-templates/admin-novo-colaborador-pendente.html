@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Novo colaborador aguardando aprovação</title>
+</head>
+<body style="margin:0; padding:0; background-color:#eef2f0; font-family:Arial, Helvetica, sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef2f0; padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+
+          <!-- Cabeçalho: azul-marinho da logo IEFC -->
+          <tr>
+            <td style="background-color:#1E4D5C; padding:24px 32px;">
+              <span style="color:#ffffff; font-size:20px; font-weight:bold; letter-spacing:0.5px;">IEFC</span>
+              <span style="color:#B8D4DA; font-size:12px; display:block; margin-top:2px;">Painel Administrativo</span>
+            </td>
+          </tr>
+
+          <!-- Faixa de destaque: laranja do site -->
+          <tr>
+            <td style="background-color:#F2A93B; padding:14px 32px;">
+              <span style="color:#ffffff; font-size:15px; font-weight:bold;">Novo cadastro de colaborador</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:32px;">
+              <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#374151;">
+                Um novo colaborador se cadastrou no sistema e está aguardando sua aprovação para poder acessar a plataforma.
+              </p>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef2f0; border-radius:6px; margin:0 0 24px; border-left:4px solid #1A8A87;">
+                <tr>
+                  <td style="padding:16px 20px; font-size:14px; color:#1E4D5C;">
+                    <p style="margin:0 0 8px;"><strong>Nome:</strong> {{NOME_COLABORADOR}}</p>
+                    <p style="margin:0;"><strong>E-mail:</strong> {{EMAIL_COLABORADOR}}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="border-radius:6px; background-color:#1A8A87;">
+                    <a href="{{PAINEL_URL}}" target="_blank"
+                       style="display:inline-block; padding:12px 24px; font-size:14px; font-weight:bold; color:#ffffff; text-decoration:none;">
+                      Analisar cadastro
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:24px 0 0; font-size:13px; line-height:1.6; color:#6E8B9B;">
+                Enquanto o cadastro não for aprovado, este colaborador não conseguirá fazer login no sistema.
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:18px 32px; background-color:#eef2f0; border-top:1px solid #dbe4e1;">
+              <p style="margin:0; font-size:12px; color:#6E8B9B;">
+                Este é um e-mail automático do sistema IEFC. Não é necessário responder.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: ${IEFC_DATABASE_NAME}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - iefc-db-data:/var/lib/postgresql/data
     networks:
@@ -28,7 +28,7 @@ services:
       POSTGRES_DB: ${FLUXY_DATABASE_NAME}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - fluxy-db-data:/var/lib/postgresql/data
     networks:
