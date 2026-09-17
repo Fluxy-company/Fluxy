@@ -102,9 +102,8 @@ services:
     ports:
       - "${IEFC_WEB_PORT:-3000}:5173"
     volumes:
-      - ./iefc-institucional/src:/app/src         
-      - ./iefc-institucional/public:/app/public
-      - /app/node_modules                   
+      - ./iefc-institucional:/app
+      - /app/node_modules
     env_file:
       - .env
     depends_on:
