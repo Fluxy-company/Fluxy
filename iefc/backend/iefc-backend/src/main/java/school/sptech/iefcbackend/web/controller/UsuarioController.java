@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,21 +37,15 @@ public class UsuarioController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
-    @Operation(summary = "Busca todos os usuarios", description = "Método que busca todos os usuarios")
-    @ApiResponse(responseCode = "200", description = "Sucesso")
-    @ApiResponse(responseCode = "404", description = "Nenhum cadastro encontrado")
-    @ApiResponse(responseCode = "500", description = "Erro de servidor")
-    public ResponseEntity<List<UsuarioResponseDTO>> buscarTodos() {
-        return ResponseEntity.ok(service.buscarTodos());
-    }
-
-    @GetMapping("/paginado")
-    @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Busca todos os usuarios de forma paginada", description = "Método que busca todos os usuarios com suporte a paginação e ordenação")
     @ApiResponse(responseCode = "200", description = "Página de usuários retornada com sucesso")
-    public ResponseEntity<Page<UsuarioResponseDTO>> buscarTodosPaginado(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(service.buscarTodosPaginado(pageable));
+    public ResponseEntity<Page<UsuarioResponseDTO>> buscarTodos(
+            @PageableDefault(size = 10)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "nome", direction = Sort.Direction.ASC),
+                    @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
+            }) Pageable pageable) {
+        return ResponseEntity.ok(service.buscarTodos(pageable));
     }
 
     @GetMapping(value = "{id}")

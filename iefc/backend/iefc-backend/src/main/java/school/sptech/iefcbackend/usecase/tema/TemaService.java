@@ -18,11 +18,7 @@ public class TemaService {
         this.temaRepositoryPort = temaRepositoryPort;
     }
 
-    public List<Tema> listar() {
-        return temaRepositoryPort.findAll();
-    }
-
-    public Page<Tema> listarPaginado(Pageable pageable) {
+    public Page<Tema> listar(Pageable pageable) {
         return temaRepositoryPort.findAll(pageable);
     }
 

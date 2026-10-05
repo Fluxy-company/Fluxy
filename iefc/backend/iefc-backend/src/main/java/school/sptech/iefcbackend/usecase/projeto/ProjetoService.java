@@ -26,11 +26,7 @@ public class ProjetoService {
         return projetoRepositoryPort.save(projeto);
     }
 
-    public List<Projeto> buscarTodos() {
-        return projetoRepositoryPort.findAll();
-    }
-
-    public Page<Projeto> buscarTodosPaginado(Pageable pageable) {
+    public Page<Projeto> buscarTodos(Pageable pageable) {
         return projetoRepositoryPort.findAll(pageable);
     }
 

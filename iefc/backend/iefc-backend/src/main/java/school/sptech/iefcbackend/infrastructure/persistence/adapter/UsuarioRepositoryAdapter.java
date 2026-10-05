@@ -36,11 +36,6 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
     }
 
     @Override
-    public List<Usuario> findAll() {
-        return jpaRepository.findAll();
-    }
-
-    @Override
     public Page<Usuario> findAll(Pageable pageable) {
         return jpaRepository.findAll(pageable);
     }

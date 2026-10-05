@@ -18,11 +18,8 @@ public class CursoService {
         this.cursoRepositoryPort = cursoRepositoryPort;
     }
 
-    public List<Curso> Listar() {
-        return cursoRepositoryPort.findAll();
-    }
 
-    public Page<Curso> listarPaginado(Pageable pageable) {
+    public Page<Curso> listar(Pageable pageable) {
         return cursoRepositoryPort.findAll(pageable);
     }
 

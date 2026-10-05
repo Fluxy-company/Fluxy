@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface TemaRepositoryPort {
 
-    List<Tema> findAll();
-
     Page<Tema> findAll(Pageable pageable);
 
     Optional<Tema> findById(Long id);

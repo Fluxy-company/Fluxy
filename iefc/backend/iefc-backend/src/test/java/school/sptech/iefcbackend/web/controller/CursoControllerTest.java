@@ -7,11 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import school.sptech.iefcbackend.domain.exception.RecursoNaoEncontradoException;
 import school.sptech.iefcbackend.domain.entity.Curso;
 import school.sptech.iefcbackend.domain.entity.Video;
+import school.sptech.iefcbackend.domain.exception.RecursoNaoEncontradoException;
 import school.sptech.iefcbackend.usecase.curso.CursoService;
 import school.sptech.iefcbackend.usecase.video.VideoService;
 
@@ -48,27 +52,34 @@ class CursoControllerTest {
     }
 
     @Test
-    @DisplayName("GET /cursos deve retornar 200 com lista de cursos")
+    @DisplayName("GET /cursos deve retornar 200 com pagina de cursos")
     void listarDeveRetornar200ComCursos() {
-        when(cursoService.Listar()).thenReturn(List.of(curso));
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Curso> page = new PageImpl<>(List.of(curso), pageable, 1);
 
-        ResponseEntity<List<Curso>> response = controller.listar();
+        when(cursoService.listar(any(Pageable.class))).thenReturn(page);
+
+        ResponseEntity<Page<Curso>> response = controller.listar(pageable);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(1, response.getBody().size());
-        assertEquals("Java Spring Boot", response.getBody().get(0).getTitulo());
+        assertEquals(1, response.getBody().getTotalElements());
+        assertEquals("Java Spring Boot", response.getBody().getContent().get(0).getTitulo());
     }
 
     @Test
-    @DisplayName("GET /cursos deve retornar 200 com lista vazia")
+    @DisplayName("GET /cursos deve retornar 200 com pagina vazia")
     void listarDeveRetornar200ComListaVazia() {
-        when(cursoService.Listar()).thenReturn(Collections.emptyList());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Curso> pageVazia = new PageImpl<>(Collections.emptyList(), pageable, 0);
 
-        ResponseEntity<List<Curso>> response = controller.listar();
+        when(cursoService.listar(any(Pageable.class))).thenReturn(pageVazia);
+
+        ResponseEntity<Page<Curso>> response = controller.listar(pageable);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().isEmpty());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().getContent().isEmpty());
     }
 
     @Test

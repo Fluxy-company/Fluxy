@@ -12,8 +12,6 @@ public interface ProjetoRepositoryPort {
 
     Projeto save(Projeto projeto);
 
-    List<Projeto> findAll();
-
     Page<Projeto> findAll(Pageable pageable);
 
     Optional<Projeto> findById(Long id);

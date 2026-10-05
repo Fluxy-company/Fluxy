@@ -39,17 +39,7 @@ public class UsuarioService {
         this.eventPublisher = eventPublisher;
     }
 
-    public List<UsuarioResponseDTO> buscarTodos() {
-        List<Usuario> usuarios = usuarioRepositoryPort.findAll();
-        List<UsuarioResponseDTO> dtos = new ArrayList<>();
-
-        for (Usuario usuario : usuarios) {
-            dtos.add(mapper.toDTO(usuario));
-        }
-        return dtos;
-    }
-
-    public Page<UsuarioResponseDTO> buscarTodosPaginado(Pageable pageable) {
+    public Page<UsuarioResponseDTO> buscarTodos(Pageable pageable) {
         return usuarioRepositoryPort.findAll(pageable).map(mapper::toDTO);
     }
 

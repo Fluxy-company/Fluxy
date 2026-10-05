@@ -20,11 +20,6 @@ public class CursoRepositoryAdapter implements CursoRepositoryPort {
     }
 
     @Override
-    public List<Curso> findAll() {
-        return jpaRepository.findAll();
-    }
-
-    @Override
     public Page<Curso> findAll(Pageable pageable) {
         return jpaRepository.findAll(pageable);
     }

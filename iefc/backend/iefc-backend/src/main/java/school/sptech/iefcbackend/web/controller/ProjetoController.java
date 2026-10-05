@@ -45,21 +45,11 @@ public class ProjetoController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
-    @Operation(summary = "Buscar todos os projetos", description = "Método que busca todos os projetos.")
-    @ApiResponse(responseCode = "200", description = "Projetos encontrados com sucesso!")
-    @ApiResponse(responseCode = "404", description = "Nenhum projeto foi encontrado.")
-    @ApiResponse(responseCode = "500", description = "Erro de servidor.")
-    public ResponseEntity<List<Projeto>> buscarTodos() {
-        return ResponseEntity.ok(projetoService.buscarTodos());
-    }
-
-    @GetMapping("/paginado")
-    @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Buscar projetos com paginação", description = "Método que busca projetos de forma paginada com suporte a ordenação")
     @ApiResponse(responseCode = "200", description = "Página de projetos retornada com sucesso")
-    public ResponseEntity<Page<Projeto>> buscarTodosPaginado(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(projetoService.buscarTodosPaginado(pageable));
+    public ResponseEntity<Page<Projeto>> buscarTodos(
+            @PageableDefault(size = 10, sort = "dataFim", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(projetoService.buscarTodos(pageable));
     }
 
     @GetMapping(value = "/nome/{nome}")

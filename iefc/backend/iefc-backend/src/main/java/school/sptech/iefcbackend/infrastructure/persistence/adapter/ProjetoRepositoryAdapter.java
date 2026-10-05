@@ -26,11 +26,6 @@ public class ProjetoRepositoryAdapter implements ProjetoRepositoryPort {
     }
 
     @Override
-    public List<Projeto> findAll() {
-        return jpaRepository.findAll();
-    }
-
-    @Override
     public Page<Projeto> findAll(Pageable pageable) {
         return jpaRepository.findAll(pageable);
     }

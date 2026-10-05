@@ -26,15 +26,9 @@ public class TemaController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
-    public ResponseEntity<List<Tema>> listar() {
-        return ResponseEntity.ok(service.listar());
-    }
-
-    @GetMapping("/paginado")
-    @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
     public ResponseEntity<Page<Tema>> listarPaginado(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(service.listarPaginado(pageable));
+            @PageableDefault(size = 10, sort = "nome", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(service.listar(pageable));
     }
 
     @GetMapping("/{id}")

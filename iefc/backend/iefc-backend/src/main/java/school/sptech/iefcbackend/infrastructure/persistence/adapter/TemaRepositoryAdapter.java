@@ -20,11 +20,6 @@ public class TemaRepositoryAdapter implements TemaRepositoryPort {
     }
 
     @Override
-    public List<Tema> findAll() {
-        return jpaRepository.findAll();
-    }
-
-    @Override
     public Page<Tema> findAll(Pageable pageable) {
         return jpaRepository.findAll(pageable);
     }

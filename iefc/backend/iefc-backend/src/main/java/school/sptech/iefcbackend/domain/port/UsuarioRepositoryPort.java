@@ -16,8 +16,6 @@ public interface UsuarioRepositoryPort {
 
     boolean existsByEmail(String email);
 
-    List<Usuario> findAll();
-
     Page<Usuario> findAll(Pageable pageable);
 
     List<Usuario> findAllAdmins();

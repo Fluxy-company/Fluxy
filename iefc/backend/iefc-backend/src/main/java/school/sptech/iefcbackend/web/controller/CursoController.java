@@ -46,21 +46,11 @@ public class CursoController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
-    @Operation(summary = "Busca todas as curso", description = "Método que busca todas as curso")
-    @ApiResponse(responseCode = "200", description = "Sucesso")
-    @ApiResponse(responseCode = "404", description = "Nenhum curso encontrada")
-    @ApiResponse(responseCode = "500", description = "Erro de servidor")
-    public ResponseEntity<List<Curso>> listar() {
-        return ResponseEntity.ok(service.Listar());
-    }
-
-    @GetMapping("/paginado")
-    @PreAuthorize("hasAnyAuthority('SCOPE_ROLE_ALUNO', 'SCOPE_ROLE_COLABORADOR', 'SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Busca cursos com paginação", description = "Método que lista cursos de forma paginada com suporte a ordenação")
     @ApiResponse(responseCode = "200", description = "Página de cursos retornada com sucesso")
-    public ResponseEntity<Page<Curso>> listarPaginado(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(service.listarPaginado(pageable));
+    public ResponseEntity<Page<Curso>> listar(
+            @PageableDefault(size = 10, sort = "titulo", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(service.listar(pageable));
     }
 
     @GetMapping("/{id}")

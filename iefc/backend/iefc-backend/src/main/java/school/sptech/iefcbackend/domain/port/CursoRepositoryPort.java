@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface CursoRepositoryPort {
 
-    List<Curso> findAll();
-
     Page<Curso> findAll(Pageable pageable);
 
     List<Curso> findByTemaId(Long temaId);
