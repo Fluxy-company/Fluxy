@@ -10,6 +10,8 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - iefc-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - app-network
     healthcheck:
@@ -29,6 +31,8 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - email-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     networks:
       - app-network
     healthcheck:
@@ -72,10 +76,30 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      email-service:
-        condition: service_started
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app-network
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   email-service:
     container_name: email_service
@@ -91,8 +115,11 @@ services:
     depends_on:
       email-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app-network
+
   iefc-web:
     container_name: iefc_frontend
     build:
@@ -116,6 +143,7 @@ volumes:
   email-db-data:
   iefc-maven-cache:
   redis-data:
+  rabbitmq-data:
 
 networks:
   app-network:

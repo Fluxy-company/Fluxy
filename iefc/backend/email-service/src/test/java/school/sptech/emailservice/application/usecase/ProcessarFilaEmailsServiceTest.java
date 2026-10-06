@@ -40,14 +40,14 @@ class ProcessarFilaEmailsServiceTest {
 
     @Test
     void deveMarcarComoEnviadoQuandoEnvioTemSucesso() {
-        Email email = Email.novo(List.of("aluno@sptech.school"),  null,
+        Email email = Email.novo(List.of("aluno@sptech.school"), null,
                 "no-reply@iefc.org.br", "Assunto", "Corpo", 5);
 
-        when(repository.buscarProntosParaEnvio(20)).thenReturn(List.of(email));
+        when(repository.buscarPorId(email.getId())).thenReturn(Optional.of(email));
         when(repository.salvar(any(Email.class))).thenAnswer(invocation -> invocation.getArgument(0));
         doNothing().when(sender).enviar(any(Email.class));
 
-        service.processarPendentes(20);
+        service.processarPorId(email.getId());
 
         assertThat(email.getStatus()).isEqualTo(EmailStatus.ENVIADO);
         assertThat(email.getTentativas()).isEqualTo(1);
@@ -59,11 +59,11 @@ class ProcessarFilaEmailsServiceTest {
         Email email = Email.novo(List.of("aluno@sptech.school"), null,
                 "no-reply@iefc.org.br", "Assunto", "Corpo", 5);
 
-        when(repository.buscarProntosParaEnvio(20)).thenReturn(List.of(email));
+        when(repository.buscarPorId(email.getId())).thenReturn(Optional.of(email));
         when(repository.salvar(any(Email.class))).thenAnswer(invocation -> invocation.getArgument(0));
         doThrow(new EnvioEmailException("SMTP indisponivel")).when(sender).enviar(any(Email.class));
 
-        service.processarPendentes(20);
+        service.processarPorId(email.getId());
 
         assertThat(email.getStatus()).isEqualTo(EmailStatus.FALHA);
         assertThat(email.getMensagemErro()).isEqualTo("SMTP indisponivel");

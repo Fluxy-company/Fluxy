@@ -2,22 +2,19 @@ package school.sptech.iefcbackend.infrastructure.notification;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import school.sptech.iefcbackend.domain.entity.Usuario;
 import school.sptech.iefcbackend.domain.port.NotificacaoColaboradorPort;
+import school.sptech.iefcbackend.infrastructure.messaging.EnviarEmailMessage;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EmailServiceNotificacaoAdapter implements NotificacaoColaboradorPort {
@@ -30,16 +27,10 @@ public class EmailServiceNotificacaoAdapter implements NotificacaoColaboradorPor
     private static final String COR_APROVADO = "#1A8A87";
     private static final String COR_REPROVADO = "#C0392B";
 
-    private final RestTemplate restTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     private final String templateAdminPendente;
     private final String templateColaboradorStatus;
-
-    @Value("${app.email-service.base-url:http://email-service:8080}")
-    private String baseUrl;
-
-    @Value("${app.email-service.api-key:}")
-    private String apiKey;
 
     @Value("${app.email-service.remetente:no-reply@iefc.org.br}")
     private String remetente;
@@ -50,8 +41,8 @@ public class EmailServiceNotificacaoAdapter implements NotificacaoColaboradorPor
     @Value("${app.frontend.base-url:http://localhost:3000}")
     private String frontendBaseUrl;
 
-    public EmailServiceNotificacaoAdapter(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public EmailServiceNotificacaoAdapter(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
         this.templateAdminPendente = carregarTemplate(TEMPLATE_ADMIN_PENDENTE);
         this.templateColaboradorStatus = carregarTemplate(TEMPLATE_COLABORADOR_STATUS);
     }
@@ -111,21 +102,11 @@ public class EmailServiceNotificacaoAdapter implements NotificacaoColaboradorPor
 
     private void enviar(String destinatario, String assunto, String corpoHtml) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-API-KEY", apiKey);
-
-            Map<String, Object> payload = Map.of(
-                    "destinatarios", List.of(destinatario),
-                    "remetente", remetente,
-                    "assunto", assunto,
-                    "corpo", corpoHtml
-            );
-
-            restTemplate.postForEntity(baseUrl + "/api/v1/emails", new HttpEntity<>(payload, headers), Void.class);
-            log.info("[EmailServiceNotificacaoAdapter] Notificação enfileirada no email-service para {}", destinatario);
-        } catch (RestClientException e) {
-            log.warn("[EmailServiceNotificacaoAdapter] Não foi possível notificar {} via email-service ({}). "
+            rabbitTemplate.convertAndSend(new EnviarEmailMessage(
+                    List.of(destinatario), null, remetente, assunto, corpoHtml));
+            log.info("[EmailServiceNotificacaoAdapter] Notificação publicada na fila para {}", destinatario);
+        } catch (AmqpException e) {
+            log.warn("[EmailServiceNotificacaoAdapter] Não foi possível publicar notificação para {} ({}). "
                     + "Seguindo sem bloquear o fluxo.", destinatario, e.getMessage());
         }
     }

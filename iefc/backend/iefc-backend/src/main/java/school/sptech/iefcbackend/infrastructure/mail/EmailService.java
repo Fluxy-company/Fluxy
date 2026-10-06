@@ -1,13 +1,16 @@
 package school.sptech.iefcbackend.infrastructure.mail;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import school.sptech.iefcbackend.domain.event.RelatorioGeradoEvent;
+import school.sptech.iefcbackend.infrastructure.messaging.EnviarEmailMessage;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class EmailService {
@@ -15,35 +18,38 @@ public class EmailService {
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
 
-    private final JavaMailSender mailSender;
+    private final RabbitTemplate rabbitTemplate;
 
     @Value("${app.relatorio.email.destinatario}")
     private String destinatario;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    @Value("${app.email-service.remetente:no-reply@iefc.org.br}")
+    private String remetente;
+
+    public EmailService(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public void enviarEmailRelatorio(RelatorioGeradoEvent evento) {
         try {
-            SimpleMailMessage mensagem = new SimpleMailMessage();
-            mensagem.setTo(destinatario);
-            mensagem.setSubject("Relatório IEFC " + evento.getAno() + " gerado com sucesso");
-            mensagem.setText(
-                    "Olá,\n\n" +
-                            "O Relatório de Atividades IEFC foi gerado com sucesso.\n\n" +
-                            "Ano do Relatório : " + evento.getAno() + "\n" +
-                            "Tamanho do PDF   : " + (evento.getTamanhoBytes() / 1024) + " KB\n" +
-                            "Gerado em        : " + evento.getGeradoEm().format(FORMATTER) + "\n\n" +
-                            "Sistema IEFC"
-            );
+            String corpo = "Olá,\n\n" +
+                    "O Relatório de Atividades IEFC foi gerado com sucesso.\n\n" +
+                    "Ano do Relatório : " + evento.getAno() + "\n" +
+                    "Tamanho do PDF   : " + (evento.getTamanhoBytes() / 1024) + " KB\n" +
+                    "Gerado em        : " + evento.getGeradoEm().format(FORMATTER) + "\n\n" +
+                    "Sistema IEFC";
 
-            mailSender.send(mensagem);
-            log.info("[EmailService] E-mail de notificação enviado para: {}", destinatario);
+            rabbitTemplate.convertAndSend(new EnviarEmailMessage(
+                    List.of(destinatario),
+                    null,
+                    remetente,
+                    "Relatório IEFC " + evento.getAno() + " gerado com sucesso",
+                    corpo
+            ));
+            log.info("[EmailService] E-mail de relatório enviado para a fila: {}", destinatario);
 
-        } catch (Exception e) {
-            log.error("[EmailService] Falha ao enviar e-mail: {}", e.getMessage(), e);
+        } catch (AmqpException e) {
+            log.error("[EmailService] Falha ao publicar e-mail na fila: {}", e.getMessage(), e);
         }
     }
 }
-

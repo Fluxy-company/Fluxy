@@ -4,7 +4,5 @@ import java.util.UUID;
 
 public interface ProcessarFilaEmailsUseCase {
 
-    void processarPendentes(int lote);
-
     void processarPorId(UUID id);
 }

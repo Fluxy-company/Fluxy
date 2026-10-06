@@ -4,21 +4,17 @@ import school.sptech.emailservice.domain.model.Email;
 import school.sptech.emailservice.domain.port.in.SolicitarEnvioEmailCommand;
 import school.sptech.emailservice.domain.port.in.SolicitarEnvioEmailUseCase;
 import school.sptech.emailservice.domain.port.out.EmailRepositoryPort;
-import school.sptech.emailservice.domain.port.out.NotificadorFilaPort;
 
 public class SolicitarEnvioEmailService implements SolicitarEnvioEmailUseCase {
 
     private final EmailRepositoryPort repository;
-    private final NotificadorFilaPort notificador;
     private final String remetentePadrao;
     private final Integer maxTentativasPadrao;
 
     public SolicitarEnvioEmailService(EmailRepositoryPort repository,
-                                       NotificadorFilaPort notificador,
                                        String remetentePadrao,
                                        Integer maxTentativasPadrao) {
         this.repository = repository;
-        this.notificador = notificador;
         this.remetentePadrao = remetentePadrao;
         this.maxTentativasPadrao = maxTentativasPadrao;
     }
@@ -38,8 +34,6 @@ public class SolicitarEnvioEmailService implements SolicitarEnvioEmailUseCase {
                 maxTentativasPadrao
         );
 
-        Email salvo = repository.salvar(email);
-        notificador.notificarNovoEmail(salvo.getId());
-        return salvo;
+        return repository.salvar(email);
     }
 }
