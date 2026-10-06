@@ -50,26 +50,30 @@ class ProjetoServiceTest {
     }
 
     @Test
-    @DisplayName("buscarTodos deve retornar lista com projetos")
+    @DisplayName("buscarTodos deve retornar página com projetos")
     void buscarTodosDeveRetornarLista() {
-        when(repository.findAll()).thenReturn(List.of(projeto));
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 10);
+        org.springframework.data.domain.Page<Projeto> page = new org.springframework.data.domain.PageImpl<>(List.of(projeto));
+        when(repository.findAll(pageable)).thenReturn(page);
 
-        List<Projeto> resultado = service.buscarTodos();
+        org.springframework.data.domain.Page<Projeto> resultado = service.buscarTodos(pageable);
 
-        assertEquals(1, resultado.size());
-        assertEquals("Projeto Inclusão Digital", resultado.get(0).getNome());
-        verify(repository, times(1)).findAll();
+        assertEquals(1, resultado.getTotalElements());
+        assertEquals("Projeto Inclusão Digital", resultado.getContent().get(0).getNome());
+        verify(repository, times(1)).findAll(pageable);
     }
 
     @Test
-    @DisplayName("buscarTodos deve retornar lista vazia quando não há projetos")
+    @DisplayName("buscarTodos deve retornar página vazia quando não há projetos")
     void buscarTodosDeveRetornarListaVazia() {
-        when(repository.findAll()).thenReturn(Collections.emptyList());
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 10);
+        org.springframework.data.domain.Page<Projeto> pageVazia = new org.springframework.data.domain.PageImpl<>(Collections.emptyList());
+        when(repository.findAll(pageable)).thenReturn(pageVazia);
 
-        List<Projeto> resultado = service.buscarTodos();
+        org.springframework.data.domain.Page<Projeto> resultado = service.buscarTodos(pageable);
 
         assertTrue(resultado.isEmpty());
-        verify(repository, times(1)).findAll();
+        verify(repository, times(1)).findAll(pageable);
     }
 
     @Test

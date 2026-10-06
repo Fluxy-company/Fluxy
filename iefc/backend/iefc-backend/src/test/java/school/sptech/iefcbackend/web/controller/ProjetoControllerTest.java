@@ -7,11 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import school.sptech.iefcbackend.domain.exception.RecursoNaoEncontradoException;
 import school.sptech.iefcbackend.domain.entity.Empresa;
 import school.sptech.iefcbackend.domain.entity.Projeto;
+import school.sptech.iefcbackend.domain.exception.RecursoNaoEncontradoException;
 import school.sptech.iefcbackend.usecase.projeto.ProjetoService;
 
 import java.time.LocalDate;
@@ -71,24 +75,31 @@ class ProjetoControllerTest {
     }
 
     @Test
-    @DisplayName("GET /projetos deve retornar 200 com lista de projetos")
+    @DisplayName("GET /projetos deve retornar 200 com página de projetos")
     void buscarTodosDeveRetornar200ComProjetos() {
-        when(projetoService.buscarTodos()).thenReturn(List.of(projeto));
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Projeto> page = new PageImpl<>(List.of(projeto));
+        when(projetoService.buscarTodos(any(Pageable.class))).thenReturn(page);
 
-        ResponseEntity<List<Projeto>> response = controller.buscarTodos();
+        ResponseEntity<Page<Projeto>> response = controller.buscarTodos(pageable);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getTotalElements());
+        assertEquals("Sistema IEFC", response.getBody().getContent().get(0).getNome());
     }
 
     @Test
-    @DisplayName("GET /projetos deve retornar 200 com lista vazia")
+    @DisplayName("GET /projetos deve retornar 200 com página vazia")
     void buscarTodosDeveRetornar200ComListaVazia() {
-        when(projetoService.buscarTodos()).thenReturn(Collections.emptyList());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Projeto> pageVazia = new PageImpl<>(Collections.emptyList());
+        when(projetoService.buscarTodos(any(Pageable.class))).thenReturn(pageVazia);
 
-        ResponseEntity<List<Projeto>> response = controller.buscarTodos();
+        ResponseEntity<Page<Projeto>> response = controller.buscarTodos(pageable);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().isEmpty());
     }
 

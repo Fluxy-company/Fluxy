@@ -41,30 +41,36 @@ class CursoServiceTest {
     }
 
     @Test
-    @DisplayName("Listar deve retornar todos os cursos")
+    @DisplayName("Listar deve retornar página com todos os cursos")
     void listarDeveRetornarTodosOsCursos() {
         Curso curso2 = new Curso();
         curso2.setId(2L);
         curso2.setTitulo("React.js");
 
-        when(repository.findAll()).thenReturn(List.of(curso, curso2));
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 10);
+        org.springframework.data.domain.Page<Curso> page = new org.springframework.data.domain.PageImpl<>(List.of(curso, curso2));
 
-        List<Curso> resultado = service.Listar();
+        when(repository.findAll(pageable)).thenReturn(page);
 
-        assertEquals(2, resultado.size());
-        assertEquals("Java Spring Boot", resultado.get(0).getTitulo());
-        verify(repository, times(1)).findAll();
+        org.springframework.data.domain.Page<Curso> resultado = service.listar(pageable);
+
+        assertEquals(2, resultado.getTotalElements());
+        assertEquals("Java Spring Boot", resultado.getContent().get(0).getTitulo());
+        verify(repository, times(1)).findAll(pageable);
     }
 
     @Test
-    @DisplayName("Listar deve retornar lista vazia quando não há cursos")
+    @DisplayName("Listar deve retornar página vazia quando não há cursos")
     void listarDeveRetornarListaVazia() {
-        when(repository.findAll()).thenReturn(Collections.emptyList());
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(0, 10);
+        org.springframework.data.domain.Page<Curso> pageVazia = new org.springframework.data.domain.PageImpl<>(Collections.emptyList());
 
-        List<Curso> resultado = service.Listar();
+        when(repository.findAll(pageable)).thenReturn(pageVazia);
+
+        org.springframework.data.domain.Page<Curso> resultado = service.listar(pageable);
 
         assertTrue(resultado.isEmpty());
-        verify(repository, times(1)).findAll();
+        verify(repository, times(1)).findAll(pageable);
     }
 
     @Test

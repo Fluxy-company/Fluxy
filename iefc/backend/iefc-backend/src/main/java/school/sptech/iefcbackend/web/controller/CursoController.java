@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -49,7 +50,8 @@ public class CursoController {
     @Operation(summary = "Busca cursos com paginação", description = "Método que lista cursos de forma paginada com suporte a ordenação")
     @ApiResponse(responseCode = "200", description = "Página de cursos retornada com sucesso")
     public ResponseEntity<Page<Curso>> listar(
-            @PageableDefault(size = 10, sort = "titulo", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "titulo", direction = Sort.Direction.ASC)
+            @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(service.listar(pageable));
     }
 

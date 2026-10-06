@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,6 +42,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Página de usuários retornada com sucesso")
     public ResponseEntity<Page<UsuarioResponseDTO>> buscarTodos(
             @PageableDefault(size = 10)
+            @ParameterObject
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "nome", direction = Sort.Direction.ASC),
                     @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
@@ -120,7 +122,8 @@ public class UsuarioController {
     @Operation(summary = "Lista cadastros pendentes de forma paginada", description = "Método paginado que lista colaboradores com status PENDENTE (apenas ADMIN)")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     public ResponseEntity<Page<UsuarioResponseDTO>> listarPendentesPaginado(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+            @ParameterObject Pageable pageable) {
         return ResponseEntity.ok(service.listarPendentesPaginado(pageable));
     }
 
