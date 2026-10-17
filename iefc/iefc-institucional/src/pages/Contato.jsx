@@ -32,7 +32,6 @@ export default function Contato() {
 
           <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-6">
 
-            {/* Formulário */}
             <div className="bg-white border border-border rounded-lg2 p-[30px]">
               {sent ? (
                 <div className="flex flex-col items-center justify-center text-center py-10 gap-3">

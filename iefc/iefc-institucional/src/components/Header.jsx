@@ -24,13 +24,14 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
-          <span
-            title="Área interna da equipe"
-            className="font-label text-[11px] tracking-[0.08em] uppercase text-teal-accessible cursor-pointer inline-flex items-center gap-1.5"
-          >
-            <i className="ph ph-lock-key text-[15px]" />
-            Login/Cadastre-se
-          </span>
+        <NavLink
+          to="/cadastro"
+          title="Entrar ou cadastrar-se"
+          className="font-label text-[11px] tracking-[0.08em] uppercase text-teal-accessible cursor-pointer inline-flex items-center gap-1.5"
+        >
+          <i className="ph ph-lock-key text-[15px]" />
+          Login/Cadastre-se
+          </NavLink>
           <NavLink
             to="/apoie"
             className="inline-flex items-center gap-2 bg-amber text-navy font-label font-bold text-[12px] tracking-[0.08em] uppercase px-[18px] py-[11px] rounded-md2 cursor-pointer hover:bg-amber-light transition-colors"
