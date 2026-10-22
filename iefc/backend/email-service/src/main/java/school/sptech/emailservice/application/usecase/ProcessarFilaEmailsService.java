@@ -7,7 +7,6 @@ import school.sptech.emailservice.domain.port.in.ProcessarFilaEmailsUseCase;
 import school.sptech.emailservice.domain.port.out.EmailRepositoryPort;
 import school.sptech.emailservice.domain.port.out.EmailSenderPort;
 
-import java.util.List;
 import java.util.UUID;
 
 public class ProcessarFilaEmailsService implements ProcessarFilaEmailsUseCase {
@@ -20,15 +19,6 @@ public class ProcessarFilaEmailsService implements ProcessarFilaEmailsUseCase {
     public ProcessarFilaEmailsService(EmailRepositoryPort repository, EmailSenderPort sender) {
         this.repository = repository;
         this.sender = sender;
-    }
-
-    @Override
-    public void processarPendentes(int lote) {
-        List<Email> prontos = repository.buscarProntosParaEnvio(lote);
-        if (!prontos.isEmpty()) {
-            log.info("[ProcessarFilaEmailsService] {} e-mail(s) prontos para envio nesta varredura", prontos.size());
-        }
-        prontos.forEach(this::processarUmEmail);
     }
 
     @Override
