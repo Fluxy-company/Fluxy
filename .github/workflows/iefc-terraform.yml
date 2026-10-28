@@ -17,15 +17,6 @@ concurrency:
 env:
   TF_IN_AUTOMATION: 'true'
   TF_INPUT: 'false'
-  AWS_REGION: ${{ vars.IEFC_AWS_REGION }}
-  AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION }}
-  EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
-  TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET }}
-  TF_VAR_aws_region: ${{ vars.IEFC_AWS_REGION }}
-  TF_VAR_aws_account_id: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
-  TF_VAR_availability_zone: ${{ vars.IEFC_AVAILABILITY_ZONE }}
-  TF_VAR_docker_namespace: ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}
-  TF_VAR_app_env: ${{ secrets.IEFC_APP_ENV }}
 
 jobs:
   plan:
@@ -35,8 +26,18 @@ jobs:
     defaults:
       run:
         working-directory: iefc/terraform
+    # Job-level env so values defined on the aws-academy environment (not only the repository) are resolved.
     env:
       OPERATION: ${{ inputs.operation }}
+      AWS_REGION: ${{ vars.IEFC_AWS_REGION }}
+      AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION }}
+      EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
+      TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET }}
+      TF_VAR_aws_region: ${{ vars.IEFC_AWS_REGION }}
+      TF_VAR_aws_account_id: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
+      TF_VAR_availability_zone: ${{ vars.IEFC_AVAILABILITY_ZONE }}
+      TF_VAR_docker_namespace: ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}
+      TF_VAR_app_env: ${{ secrets.IEFC_APP_ENV }}
     steps:
       - uses: actions/checkout@v4
       - name: Load AWS Academy credentials
@@ -58,14 +59,23 @@ jobs:
       - name: Check account and configuration
         shell: bash
         run: |
-          test -n "$AWS_REGION" && test -n "$EXPECTED_ACCOUNT_ID" && test -n "$TF_STATE_BUCKET"
-          test -n "$TF_VAR_availability_zone" && test -n "$TF_VAR_docker_namespace"
-          if [ -z "$TF_VAR_app_env" ]; then
-            echo "::error::Secret IEFC_APP_ENV is empty or not configured."
+          missing=()
+          [ -n "$AWS_REGION" ] || missing+=("variable IEFC_AWS_REGION")
+          [ -n "$EXPECTED_ACCOUNT_ID" ] || missing+=("variable IEFC_AWS_ACCOUNT_ID")
+          [ -n "$TF_STATE_BUCKET" ] || missing+=("variable IEFC_TF_STATE_BUCKET")
+          [ -n "$TF_VAR_availability_zone" ] || missing+=("variable IEFC_AVAILABILITY_ZONE")
+          [ -n "$TF_VAR_docker_namespace" ] || missing+=("secret MATHEUS_DOCKER_HUB_USERNAME")
+          [ -n "$TF_VAR_app_env" ] || missing+=("secret IEFC_APP_ENV")
+          if [ "${#missing[@]}" -gt 0 ]; then
+            for item in "${missing[@]}"; do echo "::error::Missing $item (Settings > Secrets and variables > Actions, or the aws-academy environment)."; done
             exit 1
           fi
           actual_account="$(aws sts get-caller-identity --query Account --output text)"
-          test "$actual_account" = "$EXPECTED_ACCOUNT_ID"
+          if [ "$actual_account" != "$EXPECTED_ACCOUNT_ID" ]; then
+            echo "::error::AWS credentials belong to account $actual_account, expected $EXPECTED_ACCOUNT_ID."
+            exit 1
+          fi
+          echo "AWS account $actual_account, region $AWS_REGION, state bucket $TF_STATE_BUCKET"
       - name: Initialize remote state
         run: >-
           terraform init -input=false -lockfile=readonly
@@ -99,6 +109,11 @@ jobs:
     defaults:
       run:
         working-directory: iefc/terraform
+    env:
+      AWS_REGION: ${{ vars.IEFC_AWS_REGION }}
+      AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION }}
+      EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
+      TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET }}
     steps:
       - uses: actions/checkout@v4
       - name: Load AWS Academy credentials
@@ -120,9 +135,15 @@ jobs:
       - name: Verify AWS account
         shell: bash
         run: |
-          test -n "$AWS_REGION" && test -n "$EXPECTED_ACCOUNT_ID" && test -n "$TF_STATE_BUCKET"
+          if [ -z "$AWS_REGION" ] || [ -z "$EXPECTED_ACCOUNT_ID" ] || [ -z "$TF_STATE_BUCKET" ]; then
+            echo "::error::Variables IEFC_AWS_REGION, IEFC_AWS_ACCOUNT_ID and IEFC_TF_STATE_BUCKET are required."
+            exit 1
+          fi
           actual_account="$(aws sts get-caller-identity --query Account --output text)"
-          test "$actual_account" = "$EXPECTED_ACCOUNT_ID"
+          if [ "$actual_account" != "$EXPECTED_ACCOUNT_ID" ]; then
+            echo "::error::AWS credentials belong to account $actual_account, expected $EXPECTED_ACCOUNT_ID."
+            exit 1
+          fi
       - name: Initialize remote state
         run: >-
           terraform init -input=false -lockfile=readonly
