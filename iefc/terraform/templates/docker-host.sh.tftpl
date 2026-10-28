@@ -1,0 +1,51 @@
+#!/bin/bash
+set -euo pipefail
+
+dnf install -y docker
+systemctl enable --now docker
+systemctl enable --now amazon-ssm-agent
+install -d -m 700 /opt/iefc /opt/iefc/secrets /usr/local/lib/docker/cli-plugins
+cd /usr/local/lib/docker/cli-plugins
+curl -fsSLo docker-compose-linux-x86_64 https://github.com/docker/compose/releases/download/v2.32.4/docker-compose-linux-x86_64
+curl -fsSLo docker-compose-linux-x86_64.sha256 https://github.com/docker/compose/releases/download/v2.32.4/docker-compose-linux-x86_64.sha256
+sha256sum -c docker-compose-linux-x86_64.sha256
+mv docker-compose-linux-x86_64 docker-compose
+chmod 755 docker-compose
+printf '%s' '${compose_base64}' | base64 -d > /opt/iefc/compose.yml
+printf '%s' '${loader_base64}' | base64 -d > /usr/local/bin/iefc-load-secrets
+chmod 700 /usr/local/bin/iefc-load-secrets
+cat > /etc/systemd/system/iefc-secrets.service <<'SERVICE'
+[Unit]
+Description=Load IEFC secrets from AWS Secrets Manager
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=20min
+ExecStart=/usr/local/bin/iefc-load-secrets ${aws_region} ${app_secret} ${jwt_secret} ${env_keys}
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+cat > /etc/systemd/system/iefc.service <<'SERVICE'
+[Unit]
+Description=IEFC containers
+Requires=docker.service iefc-secrets.service
+After=docker.service network-online.target iefc-secrets.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=20min
+WorkingDirectory=/opt/iefc
+ExecStart=/usr/bin/docker compose -f compose.yml up -d
+ExecStop=/usr/bin/docker compose -f compose.yml stop
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+systemctl daemon-reload
+systemctl enable iefc-secrets.service iefc.service
+systemctl start --no-block iefc.service

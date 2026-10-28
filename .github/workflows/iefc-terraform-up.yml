@@ -1,0 +1,15 @@
+name: IEFC infrastructure up
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/iefc-terraform.yml
+    with:
+      operation: apply
+    secrets: inherit
