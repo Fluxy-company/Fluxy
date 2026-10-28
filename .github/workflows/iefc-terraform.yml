@@ -29,13 +29,13 @@ jobs:
     # Job-level env so values defined on the aws-academy environment (not only the repository) are resolved.
     env:
       OPERATION: ${{ inputs.operation }}
-      AWS_REGION: ${{ vars.IEFC_AWS_REGION }}
-      AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION }}
-      EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
-      TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET }}
-      TF_VAR_aws_region: ${{ vars.IEFC_AWS_REGION }}
-      TF_VAR_aws_account_id: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
-      TF_VAR_availability_zone: ${{ vars.IEFC_AVAILABILITY_ZONE }}
+      AWS_REGION: ${{ vars.IEFC_AWS_REGION || secrets.IEFC_AWS_REGION }}
+      AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION || secrets.IEFC_AWS_REGION }}
+      EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID || secrets.IEFC_AWS_ACCOUNT_ID }}
+      TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET || secrets.IEFC_TF_STATE_BUCKET }}
+      TF_VAR_aws_region: ${{ vars.IEFC_AWS_REGION || secrets.IEFC_AWS_REGION }}
+      TF_VAR_aws_account_id: ${{ vars.IEFC_AWS_ACCOUNT_ID || secrets.IEFC_AWS_ACCOUNT_ID }}
+      TF_VAR_availability_zone: ${{ vars.IEFC_AVAILABILITY_ZONE || secrets.IEFC_AVAILABILITY_ZONE }}
       TF_VAR_docker_namespace: ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}
       TF_VAR_app_env: ${{ secrets.IEFC_APP_ENV }}
     steps:
@@ -67,7 +67,7 @@ jobs:
           [ -n "$TF_VAR_docker_namespace" ] || missing+=("secret MATHEUS_DOCKER_HUB_USERNAME")
           [ -n "$TF_VAR_app_env" ] || missing+=("secret IEFC_APP_ENV")
           if [ "${#missing[@]}" -gt 0 ]; then
-            for item in "${missing[@]}"; do echo "::error::Missing $item (Settings > Secrets and variables > Actions, or the aws-academy environment)."; done
+            for item in "${missing[@]}"; do echo "::error::Missing $item as a repository/environment variable or secret."; done
             exit 1
           fi
           actual_account="$(aws sts get-caller-identity --query Account --output text)"
@@ -110,10 +110,10 @@ jobs:
       run:
         working-directory: iefc/terraform
     env:
-      AWS_REGION: ${{ vars.IEFC_AWS_REGION }}
-      AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION }}
-      EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
-      TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET }}
+      AWS_REGION: ${{ vars.IEFC_AWS_REGION || secrets.IEFC_AWS_REGION }}
+      AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION || secrets.IEFC_AWS_REGION }}
+      EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID || secrets.IEFC_AWS_ACCOUNT_ID }}
+      TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET || secrets.IEFC_TF_STATE_BUCKET }}
     steps:
       - uses: actions/checkout@v4
       - name: Load AWS Academy credentials
