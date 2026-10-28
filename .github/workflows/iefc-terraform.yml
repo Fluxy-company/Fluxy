@@ -25,6 +25,7 @@ env:
   TF_VAR_aws_account_id: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
   TF_VAR_availability_zone: ${{ vars.IEFC_AVAILABILITY_ZONE }}
   TF_VAR_docker_namespace: ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}
+  TF_VAR_app_env: ${{ secrets.IEFC_APP_ENV }}
 
 jobs:
   plan:
@@ -59,6 +60,10 @@ jobs:
         run: |
           test -n "$AWS_REGION" && test -n "$EXPECTED_ACCOUNT_ID" && test -n "$TF_STATE_BUCKET"
           test -n "$TF_VAR_availability_zone" && test -n "$TF_VAR_docker_namespace"
+          if [ -z "$TF_VAR_app_env" ]; then
+            echo "::error::Secret IEFC_APP_ENV is empty or not configured."
+            exit 1
+          fi
           actual_account="$(aws sts get-caller-identity --query Account --output text)"
           test "$actual_account" = "$EXPECTED_ACCOUNT_ID"
       - name: Initialize remote state

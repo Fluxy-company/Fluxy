@@ -10,6 +10,56 @@ variables {
   aws_account_id    = "123456789012"
   availability_zone = "us-east-1a"
   docker_namespace  = "example"
+  app_env           = <<-EOT
+    # comment lines and blank lines are ignored
+    IEFC_DATABASE_NAME=iefc_db
+    IEFC_DATABASE_USERNAME=iefc_user
+    IEFC_DATABASE_PASSWORD=first
+    IEFC_DATABASE_PASSWORD="test-pass"
+    EMAIL_DATABASE_NAME=email_db
+    EMAIL_DATABASE_USERNAME=email_user
+    EMAIL_DATABASE_PASSWORD='p@ss=word'
+    RABBITMQ_USER=rabbit
+    RABBITMQ_PASS=rabbit-pass
+    MAILTRAP_USERNAME=mail-user
+    MAILTRAP_PASSWORD=mail-pass
+    APP_ADMIN_EMAIL=admin@example.com
+    APP_ADMIN_SENHA=dummy@admin
+  EOT
+}
+
+run "app_env_parsing_and_secrets" {
+  command = plan
+
+  assert {
+    condition     = nonsensitive(local.app_env["IEFC_DATABASE_PASSWORD"] == "test-pass" && local.app_env["EMAIL_DATABASE_PASSWORD"] == "p@ss=word" && local.app_env["APP_ADMIN_SENHA"] == "dummy@admin")
+    error_message = "app_env must be parsed with the last value winning and quotes removed."
+  }
+
+  assert {
+    condition     = aws_secretsmanager_secret.app_env.recovery_window_in_days == 0 && aws_secretsmanager_secret.jwt.recovery_window_in_days == 0
+    error_message = "Secrets must be deleted immediately so the environment can be recreated with the same names."
+  }
+
+  assert {
+    condition     = strcontains(aws_instance.backend.user_data, "base64 -d > /usr/local/bin/iefc-load-secrets") && strcontains(aws_instance.database.user_data, "base64 -d > /usr/local/bin/iefc-load-secrets")
+    error_message = "Private hosts must install the Secrets Manager loader."
+  }
+
+  assert {
+    condition     = !strcontains(aws_instance.backend.user_data, "test-pass") && !strcontains(aws_instance.database.user_data, "test-pass")
+    error_message = "Secret values must never be embedded in user data."
+  }
+}
+
+run "app_env_requires_mandatory_keys" {
+  command = plan
+
+  variables {
+    app_env = "IEFC_DATABASE_NAME=iefc_db"
+  }
+
+  expect_failures = [var.app_env]
 }
 
 run "network_and_compute" {

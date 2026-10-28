@@ -12,17 +12,33 @@ sha256sum -c docker-compose-linux-x86_64.sha256
 mv docker-compose-linux-x86_64 docker-compose
 chmod 755 docker-compose
 printf '%s' '${compose_base64}' | base64 -d > /opt/iefc/compose.yml
-cat > /etc/systemd/system/iefc.service <<'SERVICE'
+printf '%s' '${loader_base64}' | base64 -d > /usr/local/bin/iefc-load-secrets
+chmod 700 /usr/local/bin/iefc-load-secrets
+cat > /etc/systemd/system/iefc-secrets.service <<'SERVICE'
 [Unit]
-Description=IEFC containers
-Requires=docker.service
-After=docker.service network-online.target
-ConditionPathExists=/opt/iefc/.env
-${required_key}
+Description=Load IEFC secrets from AWS Secrets Manager
+Requires=network-online.target
+After=network-online.target
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
+TimeoutStartSec=20min
+ExecStart=/usr/local/bin/iefc-load-secrets ${aws_region} ${app_secret} ${jwt_secret} ${env_keys}
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+cat > /etc/systemd/system/iefc.service <<'SERVICE'
+[Unit]
+Description=IEFC containers
+Requires=docker.service iefc-secrets.service
+After=docker.service network-online.target iefc-secrets.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=20min
 WorkingDirectory=/opt/iefc
 ExecStart=/usr/bin/docker compose -f compose.yml up -d
 ExecStop=/usr/bin/docker compose -f compose.yml stop
@@ -31,4 +47,5 @@ ExecStop=/usr/bin/docker compose -f compose.yml stop
 WantedBy=multi-user.target
 SERVICE
 systemctl daemon-reload
-systemctl enable iefc.service
+systemctl enable iefc-secrets.service iefc.service
+systemctl start --no-block iefc.service

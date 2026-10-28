@@ -160,7 +160,11 @@ resource "aws_instance" "backend" {
   iam_instance_profile        = var.instance_profile
   user_data = templatefile("${path.module}/templates/docker-host.sh.tftpl", {
     compose_base64 = filebase64("${path.module}/deployment/backend.yml")
-    required_key   = "ConditionPathExists=/opt/iefc/secrets/jwt-private.pem\nConditionPathExists=/opt/iefc/secrets/jwt-public.pem"
+    loader_base64  = filebase64("${path.module}/templates/load-secrets.py")
+    aws_region     = var.aws_region
+    app_secret     = aws_secretsmanager_secret.app_env.name
+    jwt_secret     = aws_secretsmanager_secret.jwt.name
+    env_keys       = "*"
   })
 
   metadata_options {
@@ -187,7 +191,11 @@ resource "aws_instance" "database" {
   iam_instance_profile        = var.instance_profile
   user_data = templatefile("${path.module}/templates/docker-host.sh.tftpl", {
     compose_base64 = filebase64("${path.module}/deployment/database.yml")
-    required_key   = ""
+    loader_base64  = filebase64("${path.module}/templates/load-secrets.py")
+    aws_region     = var.aws_region
+    app_secret     = aws_secretsmanager_secret.app_env.name
+    jwt_secret     = "-"
+    env_keys       = join(",", local.database_env_keys)
   })
 
   metadata_options {
