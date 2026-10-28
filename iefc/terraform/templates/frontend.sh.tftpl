@@ -1,0 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
+dnf install -y docker
+systemctl enable --now docker
+docker run -d --name iefc-frontend --restart unless-stopped -p 80:80 ${docker_namespace}/fluxy:iefc-institucional-latest

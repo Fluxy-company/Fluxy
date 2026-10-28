@@ -1,0 +1,139 @@
+name: IEFC Terraform
+
+on:
+  workflow_call:
+    inputs:
+      operation:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: iefc-terraform-academy
+  cancel-in-progress: false
+
+env:
+  TF_IN_AUTOMATION: 'true'
+  TF_INPUT: 'false'
+  AWS_REGION: ${{ vars.IEFC_AWS_REGION }}
+  AWS_DEFAULT_REGION: ${{ vars.IEFC_AWS_REGION }}
+  EXPECTED_ACCOUNT_ID: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
+  TF_STATE_BUCKET: ${{ vars.IEFC_TF_STATE_BUCKET }}
+  TF_VAR_aws_region: ${{ vars.IEFC_AWS_REGION }}
+  TF_VAR_aws_account_id: ${{ vars.IEFC_AWS_ACCOUNT_ID }}
+  TF_VAR_availability_zone: ${{ vars.IEFC_AVAILABILITY_ZONE }}
+  TF_VAR_docker_namespace: ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}
+  TF_VAR_app_env: ${{ secrets.IEFC_APP_ENV }}
+
+jobs:
+  plan:
+    if: inputs.operation == 'apply' || inputs.operation == 'destroy'
+    runs-on: ubuntu-latest
+    environment: aws-academy
+    defaults:
+      run:
+        working-directory: iefc/terraform
+    env:
+      OPERATION: ${{ inputs.operation }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Load AWS Academy credentials
+        shell: bash
+        env:
+          AWS_ACADEMY_CREDENTIALS: ${{ secrets.AWS_ACADEMY_CREDENTIALS }}
+        run: bash "$GITHUB_WORKSPACE/.github/scripts/load-aws-academy-credentials.sh"
+      - name: Ensure AWS CLI is available
+        shell: bash
+        run: |
+          if ! command -v aws >/dev/null; then
+            curl -sSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscliv2.zip
+            unzip -q /tmp/awscliv2.zip -d /tmp && sudo /tmp/aws/install
+          fi
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+      - name: Check account and configuration
+        shell: bash
+        run: |
+          test -n "$AWS_REGION" && test -n "$EXPECTED_ACCOUNT_ID" && test -n "$TF_STATE_BUCKET"
+          test -n "$TF_VAR_availability_zone" && test -n "$TF_VAR_docker_namespace"
+          if [ -z "$TF_VAR_app_env" ]; then
+            echo "::error::Secret IEFC_APP_ENV is empty or not configured."
+            exit 1
+          fi
+          actual_account="$(aws sts get-caller-identity --query Account --output text)"
+          test "$actual_account" = "$EXPECTED_ACCOUNT_ID"
+      - name: Initialize remote state
+        run: >-
+          terraform init -input=false -lockfile=readonly
+          -backend-config="bucket=$TF_STATE_BUCKET"
+          -backend-config="key=iefc/terraform.tfstate"
+          -backend-config="region=$AWS_REGION"
+          -backend-config="use_lockfile=true"
+          -backend-config="encrypt=true"
+      - name: Validate and create plan
+        shell: bash
+        run: |
+          terraform fmt -check -recursive
+          terraform validate
+          terraform test -no-color
+          if [ "$OPERATION" = destroy ]; then
+            terraform plan -destroy -input=false -lock-timeout=5m -out=iefc.tfplan
+          else
+            terraform plan -input=false -lock-timeout=5m -out=iefc.tfplan
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iefc-terraform-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: iefc/terraform/iefc.tfplan
+          retention-days: 1
+          if-no-files-found: error
+
+  apply:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: aws-academy
+    defaults:
+      run:
+        working-directory: iefc/terraform
+    steps:
+      - uses: actions/checkout@v4
+      - name: Load AWS Academy credentials
+        shell: bash
+        env:
+          AWS_ACADEMY_CREDENTIALS: ${{ secrets.AWS_ACADEMY_CREDENTIALS }}
+        run: bash "$GITHUB_WORKSPACE/.github/scripts/load-aws-academy-credentials.sh"
+      - name: Ensure AWS CLI is available
+        shell: bash
+        run: |
+          if ! command -v aws >/dev/null; then
+            curl -sSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o /tmp/awscliv2.zip
+            unzip -q /tmp/awscliv2.zip -d /tmp && sudo /tmp/aws/install
+          fi
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+      - name: Verify AWS account
+        shell: bash
+        run: |
+          test -n "$AWS_REGION" && test -n "$EXPECTED_ACCOUNT_ID" && test -n "$TF_STATE_BUCKET"
+          actual_account="$(aws sts get-caller-identity --query Account --output text)"
+          test "$actual_account" = "$EXPECTED_ACCOUNT_ID"
+      - name: Initialize remote state
+        run: >-
+          terraform init -input=false -lockfile=readonly
+          -backend-config="bucket=$TF_STATE_BUCKET"
+          -backend-config="key=iefc/terraform.tfstate"
+          -backend-config="region=$AWS_REGION"
+          -backend-config="use_lockfile=true"
+          -backend-config="encrypt=true"
+      - uses: actions/download-artifact@v4
+        with:
+          name: iefc-terraform-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: iefc/terraform
+      - name: Apply reviewed plan
+        run: terraform apply -input=false -lock-timeout=5m iefc.tfplan

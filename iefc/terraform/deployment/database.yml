@@ -1,0 +1,28 @@
+services:
+  iefc-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${IEFC_DATABASE_NAME:?required}
+      POSTGRES_USER: ${IEFC_DATABASE_USERNAME:?required}
+      POSTGRES_PASSWORD: ${IEFC_DATABASE_PASSWORD:?required}
+    ports:
+      - "10.20.2.10:5432:5432"
+    volumes:
+      - iefc-data:/var/lib/postgresql/data
+
+  email-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${EMAIL_DATABASE_NAME:?required}
+      POSTGRES_USER: ${EMAIL_DATABASE_USERNAME:?required}
+      POSTGRES_PASSWORD: ${EMAIL_DATABASE_PASSWORD:?required}
+    ports:
+      - "10.20.2.10:5433:5432"
+    volumes:
+      - email-data:/var/lib/postgresql/data
+
+volumes:
+  iefc-data:
+  email-data:

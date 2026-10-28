@@ -1,0 +1,58 @@
+services:
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:?required}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:?required}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  iefc-api:
+    image: ${DOCKER_NAMESPACE:?required}/fluxy:iefc-backend-latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      IEFC_DATABASE_HOST: 10.20.2.10
+      IEFC_DATABASE_PORT: 5432
+      RABBITMQ_HOST: rabbitmq
+      REDIS_HOST: redis
+      JWT_PRIVATE_KEY: file:/run/secrets/jwt-private.pem
+      JWT_PUBLIC_KEY: file:/run/secrets/jwt-public.pem
+    ports:
+      - "10.20.2.11:8080:8080"
+    volumes:
+      - /opt/iefc/secrets/jwt-private.pem:/run/secrets/jwt-private.pem:ro
+      - /opt/iefc/secrets/jwt-public.pem:/run/secrets/jwt-public.pem:ro
+    depends_on:
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+
+  email-service:
+    image: ${DOCKER_NAMESPACE:?required}/fluxy:email-service-latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://10.20.2.10:5433/${EMAIL_DATABASE_NAME:?required}
+      RABBITMQ_HOST: rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  redis-data:
+  rabbitmq-data:

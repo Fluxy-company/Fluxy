@@ -1,0 +1,20 @@
+name: IEFC infrastructure down
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type DESTROY to confirm deletion of infrastructure and database data
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    if: github.ref == 'refs/heads/main' && inputs.confirmation == 'DESTROY'
+    uses: ./.github/workflows/iefc-terraform.yml
+    with:
+      operation: destroy
+    secrets: inherit

@@ -1,0 +1,122 @@
+name: IEFC Docker images
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: iefc-images-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-backends:
+    name: Test ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: iefc-backend
+            path: iefc/backend/iefc-backend
+          - name: email-service
+            path: iefc/backend/email-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: ${{ matrix.path }}/pom.xml
+      - name: Ensure Maven is available
+        run: command -v mvn >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq maven)
+      - name: Run Maven verification
+        working-directory: ${{ matrix.path }}
+        run: mvn --batch-mode --no-transfer-progress verify
+
+  test-frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: iefc/iefc-institucional
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: iefc/iefc-institucional/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  build-images:
+    name: Build ${{ matrix.name }} image
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: iefc-backend
+            path: iefc/backend/iefc-backend
+          - name: email-service
+            path: iefc/backend/email-service
+          - name: iefc-institucional
+            path: iefc/iefc-institucional
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exclude JWT private key from Docker context
+        if: matrix.name == 'iefc-backend'
+        run: rm -f iefc/backend/iefc-backend/src/main/resources/app.key
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.path }}
+          target: prod
+          push: false
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+  publish-images:
+    name: Publish ${{ matrix.name }} image
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs:
+      - test-backends
+      - test-frontend
+      - build-images
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: iefc-backend
+            path: iefc/backend/iefc-backend
+          - name: email-service
+            path: iefc/backend/email-service
+          - name: iefc-institucional
+            path: iefc/iefc-institucional
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exclude JWT private key from Docker context
+        if: matrix.name == 'iefc-backend'
+        run: rm -f iefc/backend/iefc-backend/src/main/resources/app.key
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.MATHEUS_DOCKER_HUB_PERSONAL_ACESS_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.path }}
+          target: prod
+          push: true
+          tags: |
+            ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}/fluxy:${{ matrix.name }}-latest
+            ${{ secrets.MATHEUS_DOCKER_HUB_USERNAME }}/fluxy:${{ matrix.name }}-sha-${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.name }}
