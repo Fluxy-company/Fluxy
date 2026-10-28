@@ -56,6 +56,26 @@ services:
       timeout: 5s
       retries: 5
 
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   iefc-api:
     container_name: iefc_backend
     restart: unless-stopped
@@ -72,8 +92,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      email-service:
-        condition: service_started
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app-network
 
@@ -91,6 +111,8 @@ services:
     depends_on:
       email-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app-network
 
@@ -98,6 +120,7 @@ volumes:
   iefc-db-data:
   email-db-data:
   redis-data:
+  rabbitmq-data:
 
 networks:
   app-network:

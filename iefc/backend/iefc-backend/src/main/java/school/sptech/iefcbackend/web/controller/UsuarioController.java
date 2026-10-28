@@ -127,6 +127,19 @@ public class UsuarioController {
         return ResponseEntity.ok(service.listarPendentesPaginado(pageable));
     }
 
+    @GetMapping("/colaboradores/status/{status}")
+    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
+    @Operation(summary = "Lista colaboradores por status", description = "Método paginado que lista colaboradores PENDENTE, APROVADO ou REPROVADO, para histórico (apenas ADMIN)")
+    @ApiResponse(responseCode = "200", description = "Sucesso")
+    @ApiResponse(responseCode = "400", description = "Status inválido")
+    @ApiResponse(responseCode = "403", description = "Acesso negado - apenas ADMIN")
+    public ResponseEntity<Page<UsuarioResponseDTO>> listarColaboradoresPorStatus(
+            @PathVariable String status,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+            @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(service.listarColaboradoresPorStatus(status, pageable));
+    }
+
     @PutMapping("/{id}/aprovar")
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     @Operation(summary = "Aprova cadastro de colaborador", description = "Método que aprova um cadastro PENDENTE, liberando o login (apenas ADMIN)")

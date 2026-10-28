@@ -16,6 +16,9 @@ export default {
         'teal-pale': 'var(--teal-pale)',
         'green-pale': 'var(--green-pale)',
         cream: 'var(--cream)',
+        'amber-soft': 'var(--amber-soft)',
+        ice: 'var(--ice)',
+        sage: 'var(--sage)',
 
         ink: 'var(--ink)',
         'ink-soft': 'var(--ink-soft)',
@@ -50,8 +53,8 @@ export default {
       },
       fontFamily: {
         display: ['Ubuntu', 'Segoe UI', 'sans-serif'],
-        body: ['Open Sans', '-apple-system', 'sans-serif'],
-        label: ['Space Grotesk', 'Open Sans', 'sans-serif'],
+        body: ['Inter', '-apple-system', 'sans-serif'],
+        label: ['Inter', '-apple-system', 'sans-serif'],
       },
       fontSize: {
         hero: 'var(--text-hero)',

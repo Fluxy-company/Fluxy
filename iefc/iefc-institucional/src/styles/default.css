@@ -13,6 +13,10 @@
   --teal-pale: #CFE3E2;
   --green-pale: #BFD6B8;
   --cream: #FCF3E4;
+
+  --amber-soft: #F2B143;
+  --ice: #CFE3E1;
+  --sage: #C0D6BC;
   
   --ink: #1A1A1A;
   --ink-soft: #3A4D54;
@@ -54,8 +58,8 @@
 
 :root {
   --font-display: 'Ubuntu', 'Segoe UI', sans-serif;
-  --font-body: 'Open Sans', -apple-system, sans-serif;
-  --font-label: 'Space Grotesk', 'Open Sans', sans-serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-label: 'Inter', -apple-system, sans-serif;
 
   --fw-regular: 400;
   --fw-medium: 500;

@@ -1,27 +1,38 @@
-import { useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
 import Button from '../components/Button'
 import Layout from '../components/Layout'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
-  const location = useLocation()
+  const [searchParams] = useSearchParams()
+  const { login } = useAuth()
 
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
 
-  const destino = location.state?.from || '/area'
+  const next = searchParams.get('next') || '/'
 
-  function handleSubmit(e) {
+  useEffect(() => {
+    if (searchParams.get('expirou') === '1') {
+      setErro('Sua sessão expirou. Entre novamente.')
+    }
+  }, [searchParams])
+
+  async function handleSubmit(e) {
     e.preventDefault()
     setErro('')
-    const resultado = login(email, senha)
+    setEnviando(true)
+    const resultado = await login(email, senha)
+    setEnviando(false)
     if (!resultado.ok) {
-      setErro(resultado.erro)
+      if (resultado.erro.status !== 429) setErro(resultado.erro.message)
       return
     }
-    navigate(destino, { replace: true })
+    navigate(next, { replace: true })
   }
 
   return (
@@ -73,8 +84,14 @@ export default function Login() {
                 />
               </label>
 
-              <Button variant="amber" icon={null} className="w-full mt-2" type="submit">
-                Entrar
+              <Button
+                variant="amber"
+                icon={null}
+                className="w-full mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                type="submit"
+                disabled={enviando}
+              >
+                {enviando ? 'Entrando...' : 'Entrar'}
               </Button>
             </form>
 

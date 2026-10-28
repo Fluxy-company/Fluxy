@@ -3,6 +3,7 @@ package school.sptech.iefcbackend.domain.port;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import school.sptech.iefcbackend.domain.entity.Usuario;
+import school.sptech.iefcbackend.domain.enums.Role;
 import school.sptech.iefcbackend.domain.enums.StatusCadastro;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface UsuarioRepositoryPort {
     List<Usuario> findByStatus(StatusCadastro status);
 
     Page<Usuario> findByStatus(StatusCadastro status, Pageable pageable);
+
+    Page<Usuario> findByRoleAndStatus(Role role, StatusCadastro status, Pageable pageable);
 
     Usuario save(Usuario usuario);
 

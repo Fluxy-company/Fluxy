@@ -64,6 +64,12 @@ export const agendaHome = [
   { day: '14', month: 'AGO', type: 'Projeto Plantas', title: 'Oficina de botânica experimental' },
 ]
 
+export const equipe = [
+  { nome: 'Diretoria executiva', papel: 'Direção-geral do IEFC', foto: null },
+  { nome: 'Coordenação pedagógica', papel: 'Programas Lúmina e Vérita', foto: null },
+  { nome: 'Núcleo de pesquisa', papel: 'Conteúdo científico e parcerias', foto: null },
+]
+
 export const agenda = [
   { day: '02', month: 'Ago', type: 'Online · ao vivo', title: 'Palestra: Ciência contra a desinformação' },
   { day: '14', month: 'Ago', type: 'Projeto Plantas', title: 'Oficina de botânica experimental' },

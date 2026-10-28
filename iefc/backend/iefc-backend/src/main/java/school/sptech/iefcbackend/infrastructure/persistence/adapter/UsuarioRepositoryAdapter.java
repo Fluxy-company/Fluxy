@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import school.sptech.iefcbackend.domain.entity.Usuario;
+import school.sptech.iefcbackend.domain.enums.Role;
 import school.sptech.iefcbackend.domain.enums.StatusCadastro;
 import school.sptech.iefcbackend.domain.port.UsuarioRepositoryPort;
 import school.sptech.iefcbackend.infrastructure.persistence.jpa.UsuarioJpaRepository;
@@ -53,6 +54,11 @@ public class UsuarioRepositoryAdapter implements UsuarioRepositoryPort {
     @Override
     public Page<Usuario> findByStatus(StatusCadastro status, Pageable pageable) {
         return jpaRepository.findByStatus(status, pageable);
+    }
+
+    @Override
+    public Page<Usuario> findByRoleAndStatus(Role role, StatusCadastro status, Pageable pageable) {
+        return jpaRepository.findByRoleAndStatus(role, status, pageable);
     }
 
     @Override
