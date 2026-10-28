@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import Button from '../components/Button'
 import Layout from '../components/Layout'
+import { useAuth } from '../contexts/AuthContext'
 
 const TIPOS = [
   {
@@ -20,20 +21,22 @@ const TIPOS = [
 
 export default function Cadastro() {
   const navigate = useNavigate()
+  const { cadastrarAluno, cadastrarColaborador } = useAuth()
 
   const [form, setForm] = useState({
     nome: '',
     email: '',
-    telefone: '',
     senha: '',
     confirmarSenha: '',
     tipo: 'estudante',
   })
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const [cadastroPendente, setCadastroPendente] = useState(false)
 
   const set = (campo) => (e) => setForm((f) => ({ ...f, [campo]: e.target.value }))
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setErro('')
 
@@ -46,20 +49,23 @@ export default function Cadastro() {
       return
     }
 
-    const resultado = cadastrar({
-      nome: form.nome,
-      email: form.email,
-      telefone: form.telefone,
-      senha: form.senha,
-      tipo: form.tipo,
-    })
+    setEnviando(true)
+    const dados = { nome: form.nome, email: form.email, senha: form.senha }
+    const resultado =
+      form.tipo === 'colaborador' ? await cadastrarColaborador(dados) : await cadastrarAluno(dados)
+    setEnviando(false)
 
     if (!resultado.ok) {
-      setErro(resultado.erro)
+      if (resultado.erro.status !== 429) setErro(resultado.erro.message)
       return
     }
 
-    navigate('/area', { replace: true })
+    if (resultado.pendente) {
+      setCadastroPendente(true)
+      return
+    }
+
+    navigate('/', { replace: true })
   }
 
   return (
@@ -83,6 +89,23 @@ export default function Cadastro() {
               </div>
             )}
 
+            {cadastroPendente ? (
+              <div className="flex items-start gap-3 bg-teal-pale border border-teal-accessible/30 rounded-md2 px-4 py-4">
+                <i className="ph ph-clock-countdown text-teal-accessible text-[20px] mt-0.5" />
+                <div>
+                  <p className="text-[14px] font-display font-medium text-navy m-0">
+                    Cadastro enviado para aprovação
+                  </p>
+                  <p className="text-[13px] text-ink-soft mt-1 mb-0">
+                    Seu cadastro de colaborador está aguardando aprovação do administrador. Você
+                    receberá um e-mail assim que ele for analisado e poderá entrar após a aprovação.
+                  </p>
+                  <NavLink to="/login" className="inline-block mt-3 text-teal-accessible font-medium text-[13px]">
+                    Ir para a tela de login
+                  </NavLink>
+                </div>
+              </div>
+            ) : (
             <form className="space-y-4" onSubmit={handleSubmit}>
               <label className="block">
                 <span className="font-label text-[10px] tracking-[0.1em] uppercase text-ink-caption">
@@ -98,34 +121,19 @@ export default function Cadastro() {
                 />
               </label>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <label className="block">
-                  <span className="font-label text-[10px] tracking-[0.1em] uppercase text-ink-caption">
-                    E-mail
-                  </span>
-                  <input
-                    type="email"
-                    required
-                    value={form.email}
-                    onChange={set('email')}
-                    placeholder="seu@email.com"
-                    className="w-full mt-1.5 border border-input-border bg-surface-input rounded-md2 px-3 py-2.5 text-sm focus:border-teal-accessible focus:outline-none"
-                  />
-                </label>
-                <label className="block">
-                  <span className="font-label text-[10px] tracking-[0.1em] uppercase text-ink-caption">
-                    Telefone
-                  </span>
-                  <input
-                    type="tel"
-                    required
-                    value={form.telefone}
-                    onChange={set('telefone')}
-                    placeholder="(11) 90000-0000"
-                    className="w-full mt-1.5 border border-input-border bg-surface-input rounded-md2 px-3 py-2.5 text-sm focus:border-teal-accessible focus:outline-none"
-                  />
-                </label>
-              </div>
+              <label className="block">
+                <span className="font-label text-[10px] tracking-[0.1em] uppercase text-ink-caption">
+                  E-mail
+                </span>
+                <input
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={set('email')}
+                  placeholder="seu@email.com"
+                  className="w-full mt-1.5 border border-input-border bg-surface-input rounded-md2 px-3 py-2.5 text-sm focus:border-teal-accessible focus:outline-none"
+                />
+              </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label className="block">
@@ -190,17 +198,26 @@ export default function Cadastro() {
                 </div>
               </div>
 
-              <Button variant="amber" icon={null} className="w-full mt-2" type="submit">
-                Criar conta
+              <Button
+                variant="amber"
+                icon={null}
+                className="w-full mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                type="submit"
+                disabled={enviando}
+              >
+                {enviando ? 'Enviando...' : 'Criar conta'}
               </Button>
             </form>
+            )}
 
-            <p className="text-center text-[12px] text-ink-caption mt-5">
-              Já tem conta?{' '}
-              <NavLink to="/login" className="text-teal-accessible font-medium">
-                Entrar
-              </NavLink>
-            </p>
+            {!cadastroPendente && (
+              <p className="text-center text-[12px] text-ink-caption mt-5">
+                Já tem conta?{' '}
+                <NavLink to="/login" className="text-teal-accessible font-medium">
+                  Entrar
+                </NavLink>
+              </p>
+            )}
           </div>
 
           <p className="text-center text-on-dark-muted text-xs mt-6">
