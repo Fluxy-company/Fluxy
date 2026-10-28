@@ -2,9 +2,14 @@ import Layout from '../components/Layout'
 import Button from '../components/Button'
 import Eyebrow from '../components/Eyebrow'
 import AnimatedStat from '../components/AnimatedStat'
+import FaixaContinuar from '../components/FaixaContinuar'
+import FaixaAcessoRapido from '../components/FaixaAcessoRapido'
+import { useAuth } from '../contexts/AuthContext'
 import { stats, programs, featuredCourses, agendaHome } from '../data/siteData'
 
 export default function Home() {
+  const { estaLogado, usuario, ehAluno, podeGerir, ehAdmin } = useAuth()
+
   return (
     <Layout>
 
@@ -33,6 +38,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {estaLogado && ehAluno && <FaixaContinuar usuario={usuario} />}
+      {estaLogado && podeGerir && <FaixaAcessoRapido ehAdmin={ehAdmin} />}
 
       <section className="px-6 md:px-10 py-14 bg-cream border-b border-border-warm">
         <div className="max-w-content mx-auto">
