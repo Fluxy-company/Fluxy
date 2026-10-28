@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import school.sptech.iefcbackend.domain.entity.Usuario;
+import school.sptech.iefcbackend.domain.enums.Role;
 import school.sptech.iefcbackend.domain.enums.StatusCadastro;
 import school.sptech.iefcbackend.domain.event.ColaboradorAnalisadoEvent;
 import school.sptech.iefcbackend.domain.event.ColaboradorCadastradoEvent;
@@ -142,6 +143,16 @@ public class UsuarioService {
         return usuarioRepositoryPort.findByStatus(StatusCadastro.PENDENTE, pageable).map(mapper::toDTO);
     }
 
+    public Page<UsuarioResponseDTO> listarColaboradoresPorStatus(String status, Pageable pageable) {
+        StatusCadastro statusCadastro;
+        try {
+            statusCadastro = StatusCadastro.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Status inválido: " + status);
+        }
+        return usuarioRepositoryPort.findByRoleAndStatus(Role.COLABORADOR, statusCadastro, pageable).map(mapper::toDTO);
+    }
+
     public UsuarioResponseDTO aprovarCadastro(Long id) {
         Usuario usuario = usuarioRepositoryPort.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Sem registros nesse id"));
@@ -166,3 +177,5 @@ public class UsuarioService {
         return mapper.toDTO(saved);
     }
 }
+
+
