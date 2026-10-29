@@ -49,11 +49,23 @@ export default function QuemSomos() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {equipe.map((pessoa) => (
                 <div key={pessoa.nome} className="border border-border rounded-lg2 p-6 text-center">
-                  <div
-                    className="w-16 h-16 rounded-full bg-ice mx-auto mb-3 flex items-center justify-center"
-                    aria-hidden="true"
-                  >
-                    <i className="ph-light ph-user text-blue-gray text-[26px]" />
+                                    
+                  <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden bg-ice">
+                    {pessoa.foto ? (
+                      <img
+                        src={pessoa.foto}
+                        alt={`Foto de ${pessoa.nome}`}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <i
+                          className="ph-light ph-user text-blue-gray text-[32px]"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    )}
                   </div>
                   <h3 className="font-display font-medium text-navy text-[15px] mb-1">{pessoa.nome}</h3>
                   <p className="text-[13px] text-ink-soft m-0">{pessoa.papel}</p>

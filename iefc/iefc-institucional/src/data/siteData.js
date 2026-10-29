@@ -1,3 +1,6 @@
+import fabianaFoto from '../assets/images/equipe/fabiana.jpeg'
+import andreaFoto from '../assets/images/equipe/andrea.jpg'
+
 export const navLinks = [
   { label: 'Quem Somos', to: '/quem-somos' },
   { label: 'O que fazemos', to: '/o-que-fazemos' },
@@ -65,9 +68,9 @@ export const agendaHome = [
 ]
 
 export const equipe = [
-  { nome: 'Diretoria executiva', papel: 'Direção-geral do IEFC', foto: null },
-  { nome: 'Coordenação pedagógica', papel: 'Programas Lúmina e Vérita', foto: null },
-  { nome: 'Núcleo de pesquisa', papel: 'Conteúdo científico e parcerias', foto: null },
+  { nome: 'Fabiana Botelho Kneubil', papel: 'Diretoria Operacional', foto: fabianaFoto },
+  { nome: 'Andrea Mometi Gomes', papel: 'Diretora Presidente', foto: andreaFoto },
+  { nome: 'Colaboradores', papel: 'Núcleo de pesquisa e parcerias', foto: null },
 ]
 
 export const agenda = [

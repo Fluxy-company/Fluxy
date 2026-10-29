@@ -28,7 +28,7 @@ export default function OQueFazemos() {
 
       <section className="px-6 md:px-10 py-14">
         <div className="max-w-content mx-auto">
-          <Tabs abas={ABAS} ativa={aba} onChange={mudarAba} className="mb-10" />
+          <Tabs abas={ABAS} ativa={aba} onChange={mudarAba} className="mb-10 overscroll-x-none" />
 
           {programa && (
             <div className="max-w-[720px]">

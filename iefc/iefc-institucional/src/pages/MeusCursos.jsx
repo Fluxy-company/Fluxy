@@ -70,7 +70,7 @@ export default function MeusCursos() {
             </div>
           )}
 
-          <Tabs abas={ABAS} ativa={aba} onChange={setAba} className="mb-6" />
+          <Tabs abas={ABAS} ativa={aba} onChange={setAba} className="mb-6 overscroll-x-none" />
 
           {!cursos && !erro && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
