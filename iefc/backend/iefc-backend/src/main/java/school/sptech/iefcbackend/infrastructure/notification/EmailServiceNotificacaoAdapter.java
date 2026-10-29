@@ -53,7 +53,7 @@ public class EmailServiceNotificacaoAdapter implements NotificacaoColaboradorPor
         var corpo = templateAdminPendente
                 .replace("{{NOME_COLABORADOR}}", colaborador.getNome())
                 .replace("{{EMAIL_COLABORADOR}}", colaborador.getEmail())
-                .replace("{{PAINEL_URL}}", frontendBaseUrl + "/admin/colaboradores/pendentes");
+                .replace("{{PAINEL_URL}}", frontendBaseUrl + "/painel/colaboradores/pendentes");
 
         enviar(adminDestinatario, assunto, corpo);
     }
