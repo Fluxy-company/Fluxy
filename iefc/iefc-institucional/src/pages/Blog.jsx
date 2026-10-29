@@ -43,7 +43,7 @@ export default function Blog() {
 
       <section className="px-6 md:px-10 py-14">
         <div className="max-w-content mx-auto">
-          <Tabs abas={ABAS} ativa={aba} onChange={mudarAba} className="mb-10" />
+          <Tabs abas={ABAS} ativa={aba} onChange={mudarAba} className="mb-10 overscroll-x-none" />
 
           {posts.length === 0 ? (
             <EmptyState titulo="Nenhum post publicado ainda." />
